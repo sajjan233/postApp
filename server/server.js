@@ -36,7 +36,7 @@ connectDB();
 // Initialize Express app
 
 // Middleware
-app.use(cors());
+
 app.use(express.json());
 
 // API Routes

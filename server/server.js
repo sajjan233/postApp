@@ -1,10 +1,51 @@
-import http from 'http';
-import { Server } from 'socket.io';
-import app from "./src/app.js";
+// server/index.js
+import express from "express";
+import http from "http";
+import { Server } from "socket.io";
+import cors from "cors";
+import dotenv from "dotenv";
+import connectDB from "./src/config/db.js";
+import ApiRouter from "./src/routes/index.js";
+import authRouter from "./src/routes/authRouter.js";
+import path from "path";
+import { fileURLToPath } from 'url';
 import './src/config/passport.js';
 
-// ✅ MongoDB connection
-const { PORT } = process.env;
+// Setup __dirname in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load environment variables
+dotenv.config({ path: path.resolve(__dirname, '.env') });
+
+// Connect to MongoDB
+connectDB();
+
+// Initialize Express app
+const app = express();
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// API Routes
+app.use("/api", ApiRouter);
+app.use("/auth", authRouter);
+
+// Serve static files from public folder
+// Serve static files
+
+
+
+// Serve uploads correctly
+app.use('/uploads', express.static(path.join(__dirname, './public/uploads')));
+
+
+// Serve React build
+app.use(express.static(path.join(__dirname, '../client/build')));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+});
 
 // Create HTTP server
 const server = http.createServer(app);
@@ -12,13 +53,13 @@ const server = http.createServer(app);
 // Initialize Socket.io
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000", // React app URL
+    origin: "http://localhost:3000", // Or your deployed React app URL
     methods: ["GET", "POST"],
     credentials: true
   }
 });
 
-// Expose io globally so routes can use it
+// Expose io globally
 global.io = io;
 
 // Socket.io connection handling
@@ -31,7 +72,8 @@ io.on('connection', (socket) => {
 });
 
 // Start server
-server.listen(PORT || 5000, () => {
-  console.log(`✅ Server running on port ${PORT || 5000}`);
+const PORT = process.env.PORT || 5000;
+server.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
   console.log(`✅ Socket.io server initialized`);
 });

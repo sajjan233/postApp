@@ -15,7 +15,7 @@ const app = express();
 const corsOptions = {
   origin: [
     "http://localhost:3000",   // Local dev React app
-    "http:/3.108.254.144:5000"   // Production domain
+    "http://3.108.254.144:5000"   // Production domain
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true // Allow cookies/auth headers

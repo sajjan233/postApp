@@ -77,7 +77,7 @@ const PostDetail = () => {
   }
 
   const imageUrl = post.image
-    ? `http://localhost:5000/${post.image.startsWith('/') ? post.image.slice(1) : post.image}`
+    ? `http://3.108.254.144:5000/${post.image.startsWith('/') ? post.image.slice(1) : post.image}`
     : 'https://via.placeholder.com/800x600?text=No+Image';
 
   const isVideo = post.image && /\.(mp4|webm|ogg)$/i.test(post.image);

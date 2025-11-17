@@ -14,7 +14,7 @@ const app = express();
 
 const corsOptions = {
   origin: [
-    "http://localhost:3000",   // Local dev React app
+    "http://3.108.254.144:3000",   // Local dev React app
     "http://3.108.254.144:5000"   // Production domain
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -64,7 +64,7 @@ const server = http.createServer(app);
 // Initialize Socket.io
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000", // Or your deployed React app URL
+    origin: "http://3.108.254.144:3000", // Or your deployed React app URL
     methods: ["GET", "POST"],
     credentials: true
   }

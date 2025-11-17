@@ -33,7 +33,7 @@ const Profile = () => {
     setLoading(true);
     setError('');
     try {
-      console.log('Fetching profile: GET http://localhost:5000/auth/me');
+      console.log('Fetching profile: GET http://3.108.254.144:5000/auth/me');
       const response = await api.get('/auth/me');
       console.log('Profile response:', response.data);
       setProfile(response.data);

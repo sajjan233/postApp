@@ -125,7 +125,7 @@ const EditPost = () => {
   }
 
   const existingImageUrl = existingImage
-    ? `http://localhost:5000/${existingImage.startsWith('/') ? existingImage.slice(1) : existingImage}`
+    ? `http://3.108.254.144:5000/${existingImage.startsWith('/') ? existingImage.slice(1) : existingImage}`
     : '';
 
   return (

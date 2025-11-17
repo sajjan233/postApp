@@ -71,7 +71,7 @@ const CreatePost = () => {
       data.append('description', formData.description);
       data.append('image', formData.image);
 
-      console.log('Creating post: POST http://localhost:5000/api/post/create');
+      console.log('Creating post: POST http://3.108.254.144:5000/api/post/create');
       const token = localStorage.getItem('token');
       console.log('Token present:', !!token);
 

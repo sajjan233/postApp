@@ -10,6 +10,18 @@ import authRouter from "./src/routes/authRouter.js";
 import path from "path";
 import { fileURLToPath } from 'url';
 import './src/config/passport.js';
+const app = express();
+
+const corsOptions = {
+  origin: [
+    "http://localhost:3000",   // Local dev React app
+    "http:/3.108.254.144:5000"   // Production domain
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true // Allow cookies/auth headers
+};
+
+app.use(cors(corsOptions));
 
 // Setup __dirname in ES module
 const __filename = fileURLToPath(import.meta.url);
@@ -22,7 +34,6 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 connectDB();
 
 // Initialize Express app
-const app = express();
 
 // Middleware
 app.use(cors());

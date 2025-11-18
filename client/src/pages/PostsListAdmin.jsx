@@ -24,7 +24,7 @@ const PostsListAdmin = () => {
     setLoading(true);
     setError('');
     try {
-      console.log('Fetching posts: POST http://3.108.254.144:5000/api/allpost', { centerid: adminId });
+      console.log('Fetching posts: POST http://3.108.254.144/api/allpost', { centerid: adminId });
       const token = localStorage.getItem('token');
       console.log('Token present:', !!token);
       

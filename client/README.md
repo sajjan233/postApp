@@ -29,7 +29,7 @@ The app will run on `http://3.108.254.144:3000`
 
 ## API Configuration
 
-Make sure your backend server is running on `http://3.108.254.144:5000`
+Make sure your backend server is running on `http://3.108.254.144`
 
 ## Default Login Credentials
 

@@ -56,7 +56,7 @@ const Register = () => {
     }
 
     try {
-      console.log('Register Step 1: POST http://3.108.254.144:5000/auth/register/step1');
+      console.log('Register Step 1: POST http://3.108.254.144/auth/register/step1');
       const response = await api.post('/auth/register/step1', {
         mobile: step1Data.mobile,
         email: step1Data.email,
@@ -80,7 +80,7 @@ const Register = () => {
     setError('');
 
     try {
-      console.log('Register Step 2: POST http://3.108.254.144:5000/auth/register/step2');
+      console.log('Register Step 2: POST http://3.108.254.144/auth/register/step2');
       const response = await api.post('/auth/register/step2', {
         userId,
         name: step2Data.name,

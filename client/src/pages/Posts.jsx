@@ -84,10 +84,10 @@ const Posts = () => {
             <div key={post._id} className="post-card">
               <div className="post-image">
                 <img
-                  src={`http://3.108.254.144:5000${post.image}`}
+                  src={`http://3.108.254.144${post.image}`}
                   alt={post.title}
                   onError={(e) => {
-                    e.target.src = `http://3.108.254.144:5000${post.image}`;
+                    e.target.src = `http://3.108.254.144${post.image}`;
                   }}
                 />
               </div>

@@ -15,7 +15,7 @@ const Users = () => {
     setLoading(true);
     setError('');
     try {
-      console.log('Fetching users: POST http://3.108.254.144:5000/api/user/list');
+      console.log('Fetching users: POST http://3.108.254.144/api/user/list');
       const response = await api.post('/api/user/list');
       console.log('Users response:', response.data);
       

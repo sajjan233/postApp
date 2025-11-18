@@ -29,7 +29,7 @@ const Login = () => {
     setError('');
 
     try {
-      console.log('Login API call:', 'POST http://3.108.254.144:5000/auth/login');
+      console.log('Login API call:', 'POST http://3.108.254.144/auth/login');
       const response = await api.post('/auth/login', formData);
       console.log('Login response:', response.data);
       

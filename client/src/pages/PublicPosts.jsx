@@ -17,7 +17,7 @@ const PublicPosts = () => {
     fetchPosts();
 
     // Initialize Socket.io connection
-    const socket = io('http://3.108.254.144:5000', {
+    const socket = io('http://3.108.254.144', {
       transports: ['websocket', 'polling'],
     });
 
@@ -82,7 +82,7 @@ const PublicPosts = () => {
     setLoading(true);
     setError('');
     try {
-      console.log('Fetching public posts: POST http://3.108.254.144:5000/api/allpost');
+      console.log('Fetching public posts: POST http://3.108.254.144/api/allpost');
       const response = await api.post('/api/allpost', {
         centerid: '', // Empty for all posts
       });

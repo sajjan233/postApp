@@ -1,0 +1,54 @@
+.feed {
+  min-height: 100vh;
+  background: #000;
+  padding-bottom: 20px;
+}
+
+.feed-header {
+  position: sticky;
+  top: 0;
+  background: rgba(0, 0, 0, 0.9);
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+
+.feed-header h1 {
+  color: white;
+  font-size: 1.5rem;
+}
+
+.feed-loading,
+.feed-error {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #f5f5f5;
+  padding: 20px;
+}
+
+.feed-loading p,
+.feed-error p {
+  margin-top: 20px;
+  color: #666;
+}
+
+.feed-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.no-posts {
+  text-align: center;
+  padding: 60px 20px;
+  color: white;
+  font-size: 1.2rem;
+}
+
+

@@ -4,10 +4,10 @@
  */
 
 // API Configuration
-export const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+export const API_BASE_URL = process.env.REACT_APP_API_URL ;
 
 // Socket.io Configuration
-export const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || 'http://localhost:5000';
+export const SOCKET_URL = process.env.REACT_APP_SOCKET_URL ;
 
 // Image Base URL
 export const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL || API_BASE_URL;

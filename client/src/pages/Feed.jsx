@@ -1,84 +1,71 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { postAPI } from '../api';
-import PostCard from '../components/PostCard';
-import './Feed.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { postAPI } from "../api";
+import PostCard from "../components/PostCard";
+import FeedHeader from "../components/FeedHeader";
+import "./Feed.css";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activeCategory, setActiveCategory] = useState(null); // selected category
   const navigate = useNavigate();
 
+  // Load all posts on mount
   useEffect(() => {
-    const loadFeed = async () => {
-      const customerId = localStorage.getItem('customerId');
+    fetchPosts();
+  }, []);
 
-      // FIXED: activeAdmin parse
-      const activeAdminRaw = localStorage.getItem('activeAdmin');
-      const activeAdmin = activeAdminRaw ? JSON.parse(activeAdminRaw) : null;
+  // Fetch posts function
+  const fetchPosts = async (categoryId = null) => {
+    setLoading(true);
+    setError(null);
 
-      console.log("Active Admin →", activeAdmin);
-
-      // If no customer & no admin → go back
-      if (!customerId && !activeAdmin) {
-        navigate('/');
-        return;
+    try {
+      let res;
+      if (categoryId) {
+        res = await postAPI.getByCategory(categoryId); // GET /posts/category/:categoryId
+      } else {
+        const customerId = localStorage.getItem("customerId");
+        res = await postAPI.getFeed(customerId); // all feed
       }
-
-      try {
-        if (customerId) {
-          const response = await postAPI.getFeed(customerId);
-          setPosts(response.data.posts);
-        } else {
-          setError('Please select an admin first');
-        }
-      } catch (err) {
-        setError(err.response?.data?.message || 'Failed to load feed');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadFeed();
-  }, [navigate]);
-
-  const handlePostClick = (postId) => {
-    navigate(`/post/${postId}`);
+      setPosts(res.data.posts || []);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to load posts");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  if (loading) {
-    return (
-      <div className="feed-loading">
-        <div className="spinner"></div>
-        <p>Loading feed...</p>
-      </div>
-    );
-  }
+  // Handle category click from FeedHeader
+  const handleCategorySelect = (categoryId) => {
+    setActiveCategory(categoryId); // highlight selected category
+    fetchPosts(categoryId);
+  };
 
-  if (error) {
-    return (
-      <div className="feed-error">
-        <div className="error">{error}</div>
-        <button className="btn btn-primary" onClick={() => navigate('/')}>
-          Choose Admin
-        </button>
-      </div>
-    );
-  }
+  const handlePostClick = (postId) => navigate(`/post/${postId}`);
+  const openMenu = () => alert("Menu clicked! Open sidebar here.");
+
+  if (loading) return <p className="loading">Loading posts...</p>;
+  if (error) return <p className="error">{error}</p>;
 
   return (
     <div className="feed">
-      <div className="feed-header">
-        <h1>Your Feed</h1>
-        <button className="btn btn-secondary" onClick={() => navigate('/')}>
-          Change Admin
-        </button>
-      </div>
+      {/* Header */}
+      <FeedHeader
+        openMenu={openMenu}
+        activeCategory={activeCategory}
+        onCategorySelect={handleCategorySelect}
+      />
 
+      {/* Spacer so content doesn't hide behind fixed header */}
+      <div style={{ height: "100px" }}></div>
+
+      {/* Posts */}
       {posts.length === 0 ? (
         <div className="no-posts">
-          <p>No posts available yet. Check back later!</p>
+          <p>No posts available.</p>
         </div>
       ) : (
         <div className="feed-container">

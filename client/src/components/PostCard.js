@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './PostCard.css';
-
+const API_BASE_URL = process.env.REACT_APP_API_URL
 const PostCard = ({ post, onClick }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const images = post.images || [];
@@ -43,7 +43,7 @@ const PostCard = ({ post, onClick }) => {
         <div className="post-images">
           <div className="image-container">
             <img
-              src={`http://3.108.254.144:5000${images[currentImageIndex]}`}
+              src={`${API_BASE_URL}/${images[currentImageIndex]}`}
               alt={post.title}
               onError={(e) => {
                 e.target.src = 'https://via.placeholder.com/400x600?text=Image+Not+Found';

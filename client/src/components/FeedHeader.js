@@ -4,6 +4,7 @@ import CategorySlider from "../components/CategorySlider";
 import "./FeedHeader.css";
 
 const FeedHeader = ({ openMenu, onCategorySelect, activeCategory }) => {
+  
   const [categories, setCategories] = useState([]);
   const [showHeader, setShowHeader] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);

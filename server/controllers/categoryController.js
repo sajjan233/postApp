@@ -45,6 +45,17 @@ exports.getCategories = async (req, res) => {
   }
 };
 
+exports.getActiveCategories = async (req, res) => {
+  try {
+    const categories = await Category.find({
+      status :'active'
+    }).sort({ createdAt: -1 });
+    res.status(200).json(categories);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 // GET CATEGORY BY ID
 exports.getCategoryById = async (req, res) => {
   try {

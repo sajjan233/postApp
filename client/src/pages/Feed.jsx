@@ -25,7 +25,7 @@ const Feed = () => {
     try {
       let res;
       if (categoryId) {
-        res = await postAPI.getPostsByCategory(categoryId); // GET /posts/category/:categoryId
+        res = await postAPI.getByCategory(categoryId); // GET /posts/category/:categoryId
       } else {
         const customerId = localStorage.getItem("customerId");
         res = await postAPI.getFeed(customerId); // all feed

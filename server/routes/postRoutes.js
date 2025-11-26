@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { createPost, getFeed, getPost, getAdminPosts, getAllPosts } = require('../controllers/postController');
+const { createPost, getFeed, getPost, getAdminPosts, getAllPosts,getPostsByCategory  } = require('../controllers/postController.js');
 const { auth, requireRole } = require('../middleware/auth');
 
 // Create uploads directory if it doesn't exist
@@ -29,21 +29,14 @@ const upload = multer({
     fileSize: 5 * 1024 * 1024 // 5MB limit
   },
   fileFilter: (req, file, cb) => {
-    // Check file extension
     const fileExt = path.extname(file.originalname).toLowerCase();
     const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+    const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', '.webp'];
     
-    // Check mimetype
-    const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-    
-    const isValidExtension = allowedExtensions.includes(fileExt);
-    const isValidMimeType = allowedMimeTypes.includes(file.mimetype.toLowerCase());
-    
-    // Accept if either extension or mimetype is valid (more lenient)
-    if (isValidExtension || isValidMimeType) {
-      return cb(null, true);
+    if (allowedExtensions.includes(fileExt) || allowedMimeTypes.includes(file.mimetype.toLowerCase())) {
+      cb(null, true);
     } else {
-      return cb(new Error(`Invalid file type. Only image files (${allowedExtensions.join(', ')}) are allowed.`));
+      cb(new Error(`Invalid file type. Only image files (${allowedExtensions.join(', ')}) are allowed.`));
     }
   }
 });
@@ -61,7 +54,6 @@ const uploadMiddleware = (req, res, next) => {
         }
         return res.status(400).json({ message: err.message || 'File upload error' });
       }
-      // Handle fileFilter errors
       return res.status(400).json({ message: err.message || 'File upload error' });
     }
     next();
@@ -75,11 +67,11 @@ router.post('/create',
   uploadMiddleware,
   createPost
 );
+
+// No change for GET routes, populate category in controller handles it
 router.get('/feed', getFeed);
 router.get('/:id', getPost);
 router.get('/admin/my-posts', auth, requireRole('admin', 'masterAdmin'), getAdminPosts);
 router.get('/admin/all-posts', auth, requireRole('masterAdmin'), getAllPosts);
-
+router.get('/category/:categoryId', getPostsByCategory);
 module.exports = router;
-
-

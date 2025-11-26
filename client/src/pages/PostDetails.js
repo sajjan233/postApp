@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { postAPI } from '../api';
 import './PostDetails.css';
+const API_BASE_URL = process.env.REACT_APP_API_URL ;
 
 const PostDetails = () => {
   const { id } = useParams();
@@ -89,7 +90,7 @@ const PostDetails = () => {
           <div className="post-details-images">
             <div className="image-container-large">
               <img
-                src={`http://3.108.254.144:5000${post.images[currentImageIndex]}`}
+                src={`${API_BASE_URL}${post.images[currentImageIndex]}`}
                 alt={post.title}
                 onError={(e) => {
                   e.target.src = 'https://via.placeholder.com/600x800?text=Image+Not+Found';

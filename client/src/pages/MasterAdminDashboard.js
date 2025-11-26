@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { postAPI, adminAPI, searchAPI } from '../api';
 import CreatePostModal from '../components/CreatePostModal';
 import './MasterAdminDashboard.css';
+const API_BASE_URL = process.env.REACT_APP_API_URL
 
 const MasterAdminDashboard = () => {
   const [posts, setPosts] = useState([]);
@@ -109,7 +110,7 @@ const MasterAdminDashboard = () => {
                     {post.images && post.images.length > 0 && (
                       <div className="post-item-image">
                         <img
-                          src={`http://3.108.254.144:5000${post.images[0]}`}
+                          src={`${API_BASE_URL}/${post.images[0]}`}
                           alt={post.title}
                           onError={(e) => {
                             e.target.src = 'https://via.placeholder.com/300x300?text=No+Image';

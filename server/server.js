@@ -25,14 +25,16 @@ const adminRoutes = require('./routes/adminRoutes');
 const customerRoutes = require('./routes/customerRoutes');
 const postRoutes = require('./routes/postRoutes');
 const adminSearchRoutes = require('./routes/adminSearchRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
 
 app.use('/admin', adminRoutes);
 app.use('/customer', customerRoutes);
 app.use('/posts', postRoutes);
 app.use('/admins', adminSearchRoutes);
+app.use('/category', categoryRoutes);
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/postwala', {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })

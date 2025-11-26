@@ -43,7 +43,7 @@ const PostCard = ({ post, onClick }) => {
         <div className="post-images">
           <div className="image-container">
             <img
-              src={`${API_BASE_URL}/${images[currentImageIndex]}`}
+              src={`${API_BASE_URL}${images[currentImageIndex]}`}
               alt={post.title}
               onError={(e) => {
                 e.target.src = 'https://via.placeholder.com/400x600?text=Image+Not+Found';

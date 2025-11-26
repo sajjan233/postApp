@@ -110,7 +110,7 @@ const MasterAdminDashboard = () => {
                     {post.images && post.images.length > 0 && (
                       <div className="post-item-image">
                         <img
-                          src={`${API_BASE_URL}/${post.images[0]}`}
+                          src={`${API_BASE_URL}${post.images[0]}`}
                           alt={post.title}
                           onError={(e) => {
                             e.target.src = 'https://via.placeholder.com/300x300?text=No+Image';

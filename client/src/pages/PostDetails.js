@@ -89,7 +89,7 @@ const PostDetails = () => {
           <div className="post-details-images">
             <div className="image-container-large">
               <img
-                src={`http://localhost:5000${post.images[currentImageIndex]}`}
+                src={`http://3.108.254.144:5000${post.images[currentImageIndex]}`}
                 alt={post.title}
                 onError={(e) => {
                   e.target.src = 'https://via.placeholder.com/600x800?text=Image+Not+Found';

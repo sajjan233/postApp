@@ -43,7 +43,7 @@ const PostCard = ({ post, onClick }) => {
         <div className="post-images">
           <div className="image-container">
             <img
-              src={`http://localhost:5000${images[currentImageIndex]}`}
+              src={`http://3.108.254.144:5000${images[currentImageIndex]}`}
               alt={post.title}
               onError={(e) => {
                 e.target.src = 'https://via.placeholder.com/400x600?text=Image+Not+Found';

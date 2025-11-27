@@ -70,10 +70,7 @@ const PostDetails = () => {
 
   return (
     <div className="post-details">
-      <div className="post-details-header">
-        <button className="back-btn" onClick={() => navigate('/feed')}>← Back</button>
-        <h1>Post Details</h1>
-      </div>
+
 
       <div className="post-details-content">
         <div className="post-details-admin">

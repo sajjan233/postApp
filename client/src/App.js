@@ -14,7 +14,7 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={<ChooseAdmin />} />
+          <Route path="/" element={<Feed />} />
           <Route path="/feed" element={<Feed />} />
           <Route path="/post/:id" element={<PostDetails />} />
           <Route path="/admin/login" element={<AdminLogin />} />

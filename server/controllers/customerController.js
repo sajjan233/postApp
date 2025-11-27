@@ -4,7 +4,7 @@ const Counter = require('../models/Counter')
 // Select Admin (via QR or Search)
 exports.selectAdmin = async (req, res) => {
   try {
-    const { customerId, adminKey, adminId ,name} = req.body;
+    const { customerId, adminKey, adminId ,number} = req.body;
 
     let customer;
     let admin;
@@ -25,7 +25,7 @@ exports.selectAdmin = async (req, res) => {
     if (!customer) {
       // Create new customer
       customer = new User({
-        name: name,
+        phone: number,
         role: 'customer',
         customerId: userId
       });

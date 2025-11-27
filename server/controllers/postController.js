@@ -65,18 +65,21 @@ exports.createPost = async (req, res) => {
 exports.getFeed = async (req, res) => {
   try {
     const { customerId } = req.query;
-    if (!customerId) {
-      return res.status(400).json({ message: 'customerId is required' });
-    }
+    
+    let adminIds
+    if (customerId != 'null') {
+      const mappings = await CustomerAdminMap.find({ customerId });
+       adminIds = mappings.map(m => m.adminId);
+       
+      }else{
+        adminIds = await User.distinct('_id',{ role: {$in : ['masterAdmin','admin']} });
+        
+      }
+      
 
-    const mappings = await CustomerAdminMap.find({ customerId });
-    const adminIds = mappings.map(m => m.adminId);
-
-    const masterAdmin = await User.findOne({ role: 'masterAdmin' });
-    const masterAdminId = masterAdmin ? masterAdmin._id : null;
 
     const allAdminIds = [...adminIds];
-    if (masterAdminId) allAdminIds.push(masterAdminId);
+
 
     const posts = await Post.find({ adminId: { $in: allAdminIds } })
       .populate('adminId', 'name shopName')

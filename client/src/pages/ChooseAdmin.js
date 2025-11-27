@@ -7,7 +7,7 @@ import './ChooseAdmin.css';
 
 const ChooseAdmin = () => {
   const [mode, setMode] = useState(null); // qr, search, name
-  const [userName, setUserName] = useState('');
+  const [userNumber, setUserNumber] = useState('');
   const navigate = useNavigate();
 
   const handleAdminSelected = async (adminData) => {
@@ -29,8 +29,8 @@ const ChooseAdmin = () => {
   };
 
   const handleNameSubmit = async () => {
-    if (!userName.trim()) {
-      alert("Please enter your name");
+    if (!userNumber.toString() || userNumber.toString().length != 10) {
+      alert("Please enter your number");
       return;
     }
 
@@ -39,7 +39,7 @@ const ChooseAdmin = () => {
         customerId: null,
         adminKey: null,
         adminId: null,
-        name: userName
+        number: userNumber
       });
 
       // Save response data
@@ -70,14 +70,14 @@ const ChooseAdmin = () => {
     return (
       <div className="choose-admin">
         <div className="choose-admin-container">
-          <h1>Enter Your Name</h1>
+          <h1>Enter Your Number</h1>
 
           <input
             className="name-input"
-            type="text"
-            placeholder="Your Name"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
+            type="number"
+            placeholder="Your Number"
+            value={userNumber}
+            onChange={(e) => setUserNumber(e.target.value)}
           />
 
           <button className="submit-btn" onClick={handleNameSubmit}>

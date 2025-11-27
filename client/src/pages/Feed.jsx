@@ -59,10 +59,7 @@ const Feed = () => {
         onCategorySelect={handleCategorySelect}
       />
 
-      {/* Spacer so content doesn't hide behind fixed header */}
-      <div style={{ height: "100px" }}></div>
 
-      {/* Posts */}
       {posts.length === 0 ? (
         <div className="no-posts">
           <p>No posts available.</p>

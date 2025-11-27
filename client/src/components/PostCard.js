@@ -83,10 +83,10 @@ const PostCard = ({ post, onClick }) => {
         </div>
       )}
 
-      <div className="post-content">
+      {/* <div className="post-content">
         <h2>{post.title}</h2>
         <p>{post.description}</p>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -16,14 +16,7 @@ app.use(cors({
 }));
 
 
-const options = {
-  key: fs.readFileSync(__dirname + '/ssl/key.pem'),
-  cert: fs.readFileSync(__dirname + '/ssl/cert.pem')
-};
 
-https.createServer(options, app).listen(443, () => {
-  console.log('HTTPS Server running on port 443');
-});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -52,9 +45,12 @@ mongoose.connect(process.env.MONGODB_URI, {
 .catch(err => console.error('MongoDB Connection Error:', err));
 
 const PORT = process.env.PORT || 5000;
+const options = {
+  key: fs.readFileSync(__dirname + '/ssl/key.pem'),
+  cert: fs.readFileSync(__dirname + '/ssl/cert.pem')
+};
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// Start HTTPS server
+https.createServer(options, app).listen(PORT, () => {
+  console.log(`HTTPS Server running on port ${PORT}`);
 });
-
-

@@ -15,7 +15,7 @@ const StoryModal = ({ stories = [], initialIndex = 0, onClose }) => {
 
     timeoutRef.current = setTimeout(() => {
       handleNext();
-    }, 5000); // 5 seconds per story
+    }, 150000); // 5 seconds per story
 
     return () => clearTimeout(timeoutRef.current);
   }, [currentIndex, currentStory]);

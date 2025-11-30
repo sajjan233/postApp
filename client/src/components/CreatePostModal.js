@@ -6,46 +6,44 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    categoryId: ''
+    categoryId: ''   // this is subcategory if selected
   });
 
   const [mainCategories, setMainCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
+  const [selectedMainCategory, setSelectedMainCategory] = useState(""); // main category
 
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // -------------------------
   // Load main categories
-  // -------------------------
   useEffect(() => {
     categoryAPI.getList()
       .then((res) => setMainCategories(res.data))
       .catch(() => setError("Failed to load categories"));
   }, []);
 
-  // -------------------------
-  // Load sub categories
-  // -------------------------
+  // Fetch sub categories by parentId
   const loadSubCategories = async (parentId) => {
     try {
-      const res = await categoryAPI.getByParent(parentId);  // ✔ USING NEW API
+      const res = await categoryAPI.getByParent(parentId);
       setSubCategories(res.data);
     } catch (err) {
       setSubCategories([]);
     }
   };
 
+  // When main category changes
   const handleMainCategoryChange = async (e) => {
-    console.log("e.target.value",e.target.value);
-    
     const id = e.target.value;
 
-    // Reset selected subcategory
+    setSelectedMainCategory(id); // store main category
+
+    // Reset subcategory
     setFormData({
       ...formData,
-      categoryId: ''
+      categoryId: ""
     });
 
     if (id) {
@@ -55,9 +53,7 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
     }
   };
 
-  // -------------------------
-  // Input Change Handler
-  // -------------------------
+  // Handle text input changes
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -65,22 +61,20 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
     });
   };
 
-  // -------------------------
-  // Image Upload
-  // -------------------------
+  // Image upload (Max 4)
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
 
-    if (images.length + files.length > 3) {
-      setError('Maximum 3 images allowed.');
+    if (images.length + files.length > 4) {
+      setError("Maximum 4 images allowed.");
       return;
     }
 
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
     const invalidFiles = files.filter(file => !allowedTypes.includes(file.type.toLowerCase()));
 
     if (invalidFiles.length > 0) {
-      setError('Only image files allowed (JPG, PNG, GIF, WEBP)');
+      setError("Only image files allowed (JPG, PNG, GIF, WEBP)");
       return;
     }
 
@@ -92,34 +86,37 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
     setImages(images.filter((_, i) => i !== index));
   };
 
-  // -------------------------
-  // Submit Form
-  // -------------------------
+  // Submit post
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      if (!formData.categoryId) {
-        setError("Please select a sub category");
+      // If subcategory selected -> use that
+      // else use main category
+      const finalCategoryId = formData.categoryId || selectedMainCategory;
+
+      if (!finalCategoryId) {
+        setError("Please select at least Main Category.");
         setLoading(false);
         return;
       }
 
       const formDataToSend = new FormData();
-      formDataToSend.append('title', formData.title);
-      formDataToSend.append('description', formData.description);
-      formDataToSend.append('categoryId', formData.categoryId);
+      formDataToSend.append("title", formData.title);
+      formDataToSend.append("description", formData.description);
+      formDataToSend.append("categoryId", finalCategoryId);
 
       images.forEach((image) => {
-        formDataToSend.append('images', image);
+        formDataToSend.append("images", image);
       });
 
       await postAPI.createPost(formDataToSend);
       onPostCreated();
+
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to create post');
+      setError(err.response?.data?.message || "Failed to create post");
     } finally {
       setLoading(false);
     }
@@ -159,51 +156,41 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
           />
 
           {/* MAIN CATEGORY */}
-          <select
-            className="input"
-            onChange={handleMainCategoryChange}
-          >
+          <select className="input" onChange={handleMainCategoryChange}>
             <option value="">Select Main Category *</option>
-
             {mainCategories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
-              </option>
+              <option key={cat._id} value={cat._id}>{cat.name}</option>
             ))}
           </select>
 
-          {/* SUB CATEGORY */}
+          {/* SUB CATEGORY (optional) */}
           <select
             name="categoryId"
             className="input"
-            required
             value={formData.categoryId}
             onChange={handleChange}
           >
-            <option value="">Select Sub Category *</option>
+            <option value="">Select Sub Category (Optional)</option>
 
             {subCategories.map((sub) => (
-              <option key={sub._id} value={sub._id}>
-                {sub.name}
-              </option>
+              <option key={sub._id} value={sub._id}>{sub.name}</option>
             ))}
           </select>
 
           {/* IMAGE UPLOAD */}
           <div className="image-upload-section">
-
             <label className="upload-label">
               <input
                 type="file"
                 accept="image/*"
                 multiple
                 onChange={handleImageChange}
-                disabled={images.length >= 3}
+                disabled={images.length >= 4}
               />
-              <span className="upload-btn">Choose Images (Max 3)</span>
+              <span className="upload-btn">Choose Images (Max 4)</span>
             </label>
 
-            <p className="upload-hint">{images.length}/3 images selected</p>
+            <p className="upload-hint">{images.length}/4 images selected</p>
 
             {images.length > 0 && (
               <div className="image-preview">
@@ -228,7 +215,7 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
               Cancel
             </button>
             <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? 'Creating...' : 'Create Post'}
+              {loading ? "Creating..." : "Create Post"}
             </button>
           </div>
 

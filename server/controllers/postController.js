@@ -158,9 +158,15 @@ exports.getPostsByCategory = async (req, res) => {
     if (!category) {
       return res.status(404).json({ message: 'Category not found' });
     }
+    let allCate = await Category.distinct('_id',{parent : category.id})
 
+    if(allCate.length){
+      allCate.push(category.id)
+    }
+    console.log("allCateallCate",allCate);
+    
     // Fetch posts of this category
-    const posts = await Post.find({ categoryId })
+    const posts = await Post.find({ categoryId : {$in : allCate} })
       .populate('adminId', 'name shopName')
       .populate('categoryId', 'name slug')
       .sort({ createdAt: -1 });

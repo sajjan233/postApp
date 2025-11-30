@@ -9,20 +9,55 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
     categoryId: ''
   });
 
-  const [categories, setCategories] = useState([]);
+  const [mainCategories, setMainCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
+
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Load categories
+  // -------------------------
+  // Load main categories
+  // -------------------------
   useEffect(() => {
     categoryAPI.getList()
-      .then((res) => {        
-        setCategories(res.data);
-      })
+      .then((res) => setMainCategories(res.data))
       .catch(() => setError("Failed to load categories"));
   }, []);
 
+  // -------------------------
+  // Load sub categories
+  // -------------------------
+  const loadSubCategories = async (parentId) => {
+    try {
+      const res = await categoryAPI.getByParent(parentId);  // ✔ USING NEW API
+      setSubCategories(res.data);
+    } catch (err) {
+      setSubCategories([]);
+    }
+  };
+
+  const handleMainCategoryChange = async (e) => {
+    console.log("e.target.value",e.target.value);
+    
+    const id = e.target.value;
+
+    // Reset selected subcategory
+    setFormData({
+      ...formData,
+      categoryId: ''
+    });
+
+    if (id) {
+      await loadSubCategories(id);
+    } else {
+      setSubCategories([]);
+    }
+  };
+
+  // -------------------------
+  // Input Change Handler
+  // -------------------------
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -30,6 +65,9 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
     });
   };
 
+  // -------------------------
+  // Image Upload
+  // -------------------------
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
 
@@ -54,6 +92,9 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
     setImages(images.filter((_, i) => i !== index));
   };
 
+  // -------------------------
+  // Submit Form
+  // -------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -61,7 +102,7 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
 
     try {
       if (!formData.categoryId) {
-        setError("Please select a category");
+        setError("Please select a sub category");
         setLoading(false);
         return;
       }
@@ -87,6 +128,7 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+
         <div className="modal-header">
           <h2>Create New Post</h2>
           <button className="close-btn" onClick={onClose}>×</button>
@@ -95,6 +137,7 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
         {error && <div className="error">{error}</div>}
 
         <form onSubmit={handleSubmit}>
+
           <input
             type="text"
             name="title"
@@ -115,7 +158,21 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
             onChange={handleChange}
           />
 
-          {/* Category Dropdown */}
+          {/* MAIN CATEGORY */}
+          <select
+            className="input"
+            onChange={handleMainCategoryChange}
+          >
+            <option value="">Select Main Category *</option>
+
+            {mainCategories.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+
+          {/* SUB CATEGORY */}
           <select
             name="categoryId"
             className="input"
@@ -123,15 +180,18 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
             value={formData.categoryId}
             onChange={handleChange}
           >
-            <option value="">Select Category *</option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
+            <option value="">Select Sub Category *</option>
+
+            {subCategories.map((sub) => (
+              <option key={sub._id} value={sub._id}>
+                {sub.name}
               </option>
             ))}
           </select>
 
+          {/* IMAGE UPLOAD */}
           <div className="image-upload-section">
+
             <label className="upload-label">
               <input
                 type="file"
@@ -171,7 +231,9 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
               {loading ? 'Creating...' : 'Create Post'}
             </button>
           </div>
+
         </form>
+
       </div>
     </div>
   );

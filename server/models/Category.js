@@ -11,22 +11,25 @@ const categorySchema = new Schema(
             unique: true,
             trim: true,
         },
-
         slug: {
             type: String,
             required: true,
             unique: true,
             lowercase: true,
+            set: function (v) {
+                const str = v || this.name || "";
+                return str.toLowerCase().trim()
+                    .replace(/\s+/g, '-')
+                    .replace(/[^\w\-]+/g, '')
+                    .replace(/\-\-+/g, '-');
+            }
+        },parent: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Category",default : null
         },
-
         description: {
             type: String,
             default: "",
-        },
-
-        image: {
-            type: String,
-            default: "", // image URL
         },
 
         status: {

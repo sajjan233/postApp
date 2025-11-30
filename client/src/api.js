@@ -59,7 +59,9 @@ export const searchAPI = {
 
 export const categoryAPI = {
   getAll: () => api.get('/category'),
-  getList: () => api.get('/category/list'),
+  getList: () => api.get('/category'),
+  getByParent: (parentId) => api.get(`/category?parentid=${parentId}`)
+
 };
 
 

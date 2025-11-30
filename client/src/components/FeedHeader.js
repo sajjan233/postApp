@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { categoryAPI } from "../api";
-import CategorySlider from "../components/CategorySlider";
+import CategorySlider from "./CategorySlider";
 import "./FeedHeader.css";
 
-const FeedHeader = ({ openMenu, onCategorySelect, activeCategory }) => {
-  
+const FeedHeader = ({ activeCategory, onCategorySelect, onCategoryStory, openMenu }) => {
   const [categories, setCategories] = useState([]);
   const [showHeader, setShowHeader] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  // Fetch categories from API
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const res = await categoryAPI.getAll(); // GET /category
-        setCategories(res.data.categories || []);
+        setCategories(res.data.categories || res.data || []);
       } catch (err) {
         console.error("Category fetch error:", err);
       }
@@ -22,7 +20,7 @@ const FeedHeader = ({ openMenu, onCategorySelect, activeCategory }) => {
     fetchCategories();
   }, []);
 
-  // Scroll up/down header logic
+  // Hide header on scroll down
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > lastScrollY) setShowHeader(false);
@@ -33,12 +31,17 @@ const FeedHeader = ({ openMenu, onCategorySelect, activeCategory }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
+  const handleCategoryClick = (cat) => {
+    if (onCategorySelect) onCategorySelect(cat._id);
+    if (onCategoryStory) onCategoryStory(cat._id);
+  };
+
   return (
     <div className={`feed-header ${showHeader ? "show" : "hide"}`}>
       <CategorySlider
         categories={categories}
-  onCategoryClick={onCategorySelect} // ← MUST match CategorySlider
-  activeCategory={activeCategory}
+        onCategoryClick={handleCategoryClick}
+        activeCategory={activeCategory}
       />
       <div className="menu-icon" onClick={openMenu}>
         <div></div>

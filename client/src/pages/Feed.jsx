@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { postAPI } from "../api";
 import PostCard from "../components/PostCard";
 import FeedHeader from "../components/FeedHeader";
+import StoryModal from "../components/StoryModal";
 import "./Feed.css";
 
 const Feed = () => {
@@ -10,6 +11,10 @@ const Feed = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeCategory, setActiveCategory] = useState(null); // selected category
+
+  const [showStoryModal, setShowStoryModal] = useState(false);
+  const [storyPosts, setStoryPosts] = useState([]); // selected category posts for stories
+
   const navigate = useNavigate();
 
   // Load all posts on mount
@@ -38,10 +43,20 @@ const Feed = () => {
     }
   };
 
-  // Handle category click from FeedHeader
-  const handleCategorySelect = (categoryId) => {
+  // Handle category click
+  const handleCategorySelect = async (categoryId) => {
     setActiveCategory(categoryId); // highlight selected category
-    fetchPosts(categoryId);
+
+    try {
+      const res = await postAPI.getByCategory(categoryId);
+      const categoryPosts = res.data.posts || [];
+
+      setPosts(categoryPosts);       // feed update
+      setStoryPosts(categoryPosts);  // story modal data
+      setShowStoryModal(true);       // open story modal
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handlePostClick = (postId) => navigate(`/post/${postId}`);
@@ -59,7 +74,16 @@ const Feed = () => {
         onCategorySelect={handleCategorySelect}
       />
 
+      {/* Story Modal */}
+      {showStoryModal && (
+        <StoryModal
+          stories={storyPosts}
+          initialIndex={0}
+          onClose={() => setShowStoryModal(false)}
+        />
+      )}
 
+      {/* Feed Posts */}
       {posts.length === 0 ? (
         <div className="no-posts">
           <p>No posts available.</p>

@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
-
+const fs = require('fs')
 dotenv.config();
 
 const app = express();
@@ -14,6 +14,15 @@ app.use(cors({
   credentials: true
 }));
 
+
+const options = {
+  key: fs.readFileSync(__dirname + '/ssl/key.pem'),
+  cert: fs.readFileSync(__dirname + '/ssl/cert.pem')
+};
+
+https.createServer(options, app).listen(443, () => {
+  console.log('HTTPS Server running on port 443');
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

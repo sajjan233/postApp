@@ -36,6 +36,11 @@ app.use('/posts', postRoutes);
 app.use('/admins', adminSearchRoutes);
 app.use('/category', categoryRoutes);
 
+app.use('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/build/index.html'));
+});
+
+
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,

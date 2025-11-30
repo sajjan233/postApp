@@ -29,6 +29,7 @@ const customerRoutes = require('./routes/customerRoutes');
 const postRoutes = require('./routes/postRoutes');
 const adminSearchRoutes = require('./routes/adminSearchRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
+const path = require('path');
 
 app.use('/admin', adminRoutes);
 app.use('/customer', customerRoutes);
@@ -36,8 +37,10 @@ app.use('/posts', postRoutes);
 app.use('/admins', adminSearchRoutes);
 app.use('/category', categoryRoutes);
 
+console.log("path.join(__dirname, 'client/build/index.html')",path.join(__dirname, '../client/build/index.html'));
+
 app.use('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/build/index.html'));
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
 

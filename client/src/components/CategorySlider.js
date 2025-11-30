@@ -17,7 +17,7 @@ const CategorySlider = ({ categories = [], onCategoryClick, activeCategory }) =>
           {cat.image ? (
             <img src={cat.image} alt={cat.name} className="category-img" />
           ) : (
-            <span className="icon">📁</span>
+            <span className="icon"></span>
           )}
           <p>{cat.name}</p>
         </div>

@@ -39,9 +39,6 @@ app.use('/category', categoryRoutes);
 
 console.log("path.join(__dirname, 'client/build/index.html')",path.join(__dirname, '../client/build/index.html'));
 
-app.use('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
-});
 
 
 // MongoDB Connection
@@ -58,7 +55,15 @@ const options = {
   cert: fs.readFileSync(__dirname + '/ssl/cert.pem')
 };
 
-// Start HTTPS server
-https.createServer(options, app).listen(PORT, () => {
-  console.log(`HTTPS Server running on port ${PORT}`);
+app.use('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html')); 
 });
+// Start HTTPS server
+// https.createServer(options, app).listen(PORT, () => {
+//   console.log(`HTTPS Server running on port ${PORT}`);
+// });
+
+app.listen(PORT, () => {
+  console.log("server run on PORT",PORT);
+  
+})

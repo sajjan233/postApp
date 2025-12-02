@@ -9,7 +9,8 @@
     "server": "nodemon index.js",
     "kill-ports": "scripts\\kill-ports.bat",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "dev:clean": "npm run kill-ports && npm run dev"
+    "dev:clean": "npm run kill-ports && npm run dev",
+    "start-prod": "NODE_ENV=production node index.js"
   },
   "keywords": [],
   "author": "",

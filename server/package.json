@@ -6,7 +6,7 @@
   "scripts": {
     "create-master": "node scripts/createMasterAdmin.js",
     "client": "npm start --prefix ../client",
-    "server": "nodemon server.js",
+    "server": "nodemon index.js",
     "kill-ports": "scripts\\kill-ports.bat",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "dev:clean": "npm run kill-ports && npm run dev"

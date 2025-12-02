@@ -9,12 +9,7 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors({
-    origin: ["https://post24.in"], 
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"]
-}));
+app.use(cors())
 
 app.options("*", cors());
 

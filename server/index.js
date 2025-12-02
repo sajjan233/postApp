@@ -10,7 +10,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://3.108.254.144'],
+  origin: ['https://post24.in','http://post24.in'],
   methods: ['GET','POST','PUT','DELETE'],
   credentials: true
 }));

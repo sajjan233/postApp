@@ -109,7 +109,7 @@ export const registerAdmin = async (data) => {
  */
 export const loginAdmin = async (email, password) => {
   try {
-    const response = await api.post('/admin/login', { email, password });
+    const response = await api.post('/admin/by/login', { email, password });
     return response.data;
   } catch (error) {
     console.error('Error logging in:', error);

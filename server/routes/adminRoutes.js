@@ -6,7 +6,7 @@ const { auth, requireRole } = require('../middleware/auth');
 // Public routes
 router.post('/register', register);
 router.post('/login', login);
-router.get('/:adminKey', getAdminByKey);
+router.get('/by/:adminKey', getAdminByKey);
 
 module.exports = router;
 

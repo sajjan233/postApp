@@ -106,6 +106,7 @@ exports.login = async (req, res) => {
 exports.getAdminByKey = async (req, res) => {
   try {
     const { adminKey } = req.params;
+console.log("adminKey",adminKey);
 
     const admin = await User.findOne({ adminKey, role: 'admin' });
 

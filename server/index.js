@@ -35,7 +35,6 @@ app.use('/posts', postRoutes);
 app.use('/admins', adminSearchRoutes);
 app.use('/category', categoryRoutes);
 
-console.log("path.join(__dirname, 'client/build/index.html')",path.join(__dirname, '../client/build/index.html'));
 
 
 
@@ -53,15 +52,15 @@ const options = {
   cert: fs.readFileSync(__dirname + '/ssl/cert.pem')
 };
 
-app.use(express.static(path.join(__dirname, '../client/build')));
 
-app.use('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build/index.html')); 
-});
-// Start HTTPS server
-// https.createServer(options, app).listen(PORT, () => {
-//   console.log(`HTTPS Server running on port ${PORT}`);
-// });
+if(process.env.NODE_ENV == 'production'){
+
+  app.use(express.static(path.join(__dirname, '../client/build')));
+  
+  app.use('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build/index.html')); 
+  });
+}
 
 app.listen(PORT, () => {
   console.log("server run on PORT",PORT);

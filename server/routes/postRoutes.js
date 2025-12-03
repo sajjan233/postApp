@@ -25,9 +25,7 @@ const upload = multer({
   fileFilter: (req, file, cb) => {
     const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
     const ext = path.extname(file.originalname).toLowerCase();
-    if (!allowedExtensions.includes(ext)) {
-      return cb(new Error("Only image files allowed (.jpg, .jpeg, .png, .gif, .webp)"));
-    }
+
     cb(null, true);
   }
 });
@@ -90,6 +88,7 @@ const uploadMiddleware = (req, res, next) => {
 router.post(
   "/create",
   auth,
+  uploadMiddleware,
   upload.array("images", 3),
   compressImagesMiddleware,
   createPost

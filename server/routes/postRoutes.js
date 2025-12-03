@@ -3,7 +3,8 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { createPost, getFeed, getPost, getAdminPosts, getAllPosts,getPostsByCategory  } = require('../controllers/postController.js');
+const sharp = require("sharp");
+const { createPost, getFeed, getPost, getAdminPosts, getAllPosts, getPostsByCategory } = require('../controllers/postController.js');
 const { auth, requireRole } = require('../middleware/auth');
 
 // Create uploads directory if it doesn't exist
@@ -12,36 +13,63 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadsDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
+// ---------------------------
+// 1. Multer memory storage
+// ---------------------------
 const upload = multer({
-  storage: storage,
+  storage: multer.memoryStorage(),
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
+    fileSize: 20 * 1024 * 1024, // 20MB max RAW upload (compression ke baad size 200-400 KB ho jata hai)
+    files: 3
   },
   fileFilter: (req, file, cb) => {
-    const fileExt = path.extname(file.originalname).toLowerCase();
     const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-    const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', '.webp'];
-    
-    if (allowedExtensions.includes(fileExt) || allowedMimeTypes.includes(file.mimetype.toLowerCase())) {
-      cb(null, true);
-    } else {
-      cb(new Error(`Invalid file type. Only image files (${allowedExtensions.join(', ')}) are allowed.`));
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (!allowedExtensions.includes(ext)) {
+      return cb(new Error("Only image files allowed (.jpg, .jpeg, .png, .gif, .webp)"));
     }
+    cb(null, true);
   }
 });
 
-// Wrap upload middleware to handle errors
+// -------------------------------------------
+// 2. Custom middleware to compress all images
+// -------------------------------------------
+const compressImagesMiddleware = async (req, res, next) => {
+  try {
+    if (!req.files || req.files.length === 0) return next();
+
+    const compressedFiles = [];
+
+    for (let file of req.files) {
+      const filename = `img-${Date.now()}-${Math.round(Math.random() * 1E9)}.jpg`;
+      const outputPath = path.join(uploadsDir, filename);
+
+      // Compress using Sharp
+      await sharp(file.buffer)
+        .resize(1080)               // max width 1080px
+        .jpeg({ quality: 70 })      // 70% compression
+        .toFile(outputPath);
+
+      compressedFiles.push({
+        filename: filename,
+        path: outputPath
+      });
+    }
+
+    // Replace original multer file data with compressed files
+    req.files = compressedFiles;
+
+    next();
+
+  } catch (error) {
+    console.error("Compression Error:", error);
+    return res.status(500).json({ message: "File compression failed" });
+  }
+};
+
+// ----------------------------
+// Routes
 const uploadMiddleware = (req, res, next) => {
   upload.array('images', 3)(req, res, (err) => {
     if (err) {
@@ -59,15 +87,13 @@ const uploadMiddleware = (req, res, next) => {
     next();
   });
 };
-
-// Routes
-router.post('/create', 
-  auth, 
-  requireRole('admin', 'masterAdmin'), 
-  uploadMiddleware,
+router.post(
+  "/create",
+  auth,
+  upload.array("images", 3),
+  compressImagesMiddleware,
   createPost
 );
-
 // No change for GET routes, populate category in controller handles it
 router.get('/feed', getFeed);
 router.get('/:id', getPost);

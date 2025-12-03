@@ -40,24 +40,21 @@ const compressImagesMiddleware = async (req, res, next) => {
     const compressedFiles = [];
 
     for (let file of req.files) {
-      const filename = `img-${Date.now()}-${Math.round(Math.random() * 1E9)}.jpg`;
+      const filename = `img-${Date.now()}-${Math.round(Math.random() * 1E9)}.webp`;
       const outputPath = path.join(uploadsDir, filename);
 
-      // Compress using Sharp
       await sharp(file.buffer)
-        .resize(1080)               // max width 1080px
-        .jpeg({ quality: 70 })      // 70% compression
+        .resize({ width: 1080 })     // max width 1080px
+        .webp({ quality: 70 })       // convert everything to webp
         .toFile(outputPath);
 
       compressedFiles.push({
-        filename: filename,
+        filename,
         path: outputPath
       });
     }
 
-    // Replace original multer file data with compressed files
     req.files = compressedFiles;
-
     next();
 
   } catch (error) {
@@ -65,6 +62,7 @@ const compressImagesMiddleware = async (req, res, next) => {
     return res.status(500).json({ message: "File compression failed" });
   }
 };
+
 
 // ----------------------------
 // Routes
@@ -89,7 +87,6 @@ router.post(
   "/create",
   auth,
   uploadMiddleware,
-  upload.array("images", 3),
   compressImagesMiddleware,
   createPost
 );

@@ -174,7 +174,6 @@ exports.getPostsByCategory = async (req, res) => {
       .populate('categoryId', 'name slug')
       .sort({ createdAt: -1 });
 
-      console.log("posts",posts);
       
     res.json({ category: category.name, posts });
   } catch (error) {

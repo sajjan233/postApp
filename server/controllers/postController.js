@@ -3,7 +3,7 @@ const User = require('../models/User.js');
 const CustomerAdminMap = require('../models/CustomerAdminMap.js');
 const Counter = require('../models/Counter.js');
 const Category = require('../models/Category.js'); // add category
-
+const { generateMobileImage } = require('../scripts/comman.js')
 // Create Post
 exports.createPost = async (req, res) => {
   try {
@@ -65,23 +65,28 @@ exports.createPost = async (req, res) => {
 exports.getFeed = async (req, res) => {
   try {
     const { customerId } = req.query;
-    
+
     let adminIds
     if (customerId != 'null') {
       const mappings = await CustomerAdminMap.find({ customerId });
-       adminIds = mappings.map(m => m.adminId);
-       
-      }else{
-        adminIds = await User.distinct('_id',{ role: {$in : ['masterAdmin','admin']} });
-        
-      }
-      
+      adminIds = mappings.map(m => m.adminId);
+
+    } else {
+      adminIds = await User.distinct('_id', { role: { $in: ['masterAdmin', 'admin'] } });
+
+    }
+
 
 
     const allAdminIds = [...adminIds];
 
+    console.log("allAdminIds", allAdminIds);
+    let filter = {}
+    if (allAdminIds.length) {
+      filter = { adminId: { $in: allAdminIds } }
+    }
 
-    const posts = await Post.find({ adminId: { $in: allAdminIds } })
+    const posts = await Post.find(filter)
       .populate('adminId', 'name shopName')
       .populate('categoryId', 'name slug') // populate category
       .sort({ createdAt: -1 });
@@ -158,26 +163,44 @@ exports.getPostsByCategory = async (req, res) => {
     if (!category) {
       return res.status(404).json({ message: 'Category not found' });
     }
-    let allCate = await Category.distinct('_id',{parent : category.id})
+    let allCate = await Category.distinct('_id', { parent: category.id })
 
-    if(allCate.length){
+    if (allCate.length) {
       allCate.push(category.id)
-    }else{
+    } else {
       allCate = []
       allCate.push(category.id)
 
     }
-    
-    
-    const posts = await Post.find({ categoryId : {$in : allCate} })
+
+
+    const posts = await Post.find({ categoryId: { $in: allCate } })
       .populate('adminId', 'name shopName')
       .populate('categoryId', 'name slug')
       .sort({ createdAt: -1 });
 
-      
+
     res.json({ category: category.name, posts });
   } catch (error) {
     console.error('Get posts by category error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+exports.createImgPost = async (req, res) => {
+  let response = {
+    message: "",
+    status: 0
+  }
+  try {
+    let resp = await generateMobileImage(req.body)
+
+    response.resp = resp
+    return res.json(response)
+
+
+  } catch (err) {
+    return res.status(500).json({ message: 'Server error', error: error.message });
+
+  }
+} 

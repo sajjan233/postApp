@@ -7,6 +7,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import MasterAdminDashboard from './pages/MasterAdminDashboard';
 import AdminLogin from './pages/AdminLogin';
 import AdminRegister from './pages/AdminRegister';
+import Register from './pages/Register';
 import './App.css';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Feed />} />
           <Route path="/feed" element={<Feed />} />
+           <Route path="/register" element={<Register />} />
           <Route path="/post/:id" element={<PostDetails />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/register" element={<AdminRegister />} />

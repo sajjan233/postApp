@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { referralAPI, adminAPI } from "../api";
-
+import "./Register.css";
 const Register = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -44,19 +44,38 @@ const Register = () => {
     }
   };
 
-  return (
+ return (
+  <div className="register-wrapper">
     <div className="register-box">
       <h2>Create Account</h2>
-      {referralCode && <p>🎉 You are joining via referral</p>}
+
+      {referralCode && (
+        <p className="ref-text">🎉 You are joining via referral</p>
+      )}
 
       <form onSubmit={handleRegister}>
-        <input name="name" placeholder="Name" value={formData.name} onChange={handleChange} required />
-        <input name="number" placeholder="number" value={formData.number} onChange={handleChange} required />
-        {/* <input name="password" type="password" placeholder="Password" value={formData.password} onChange={handleChange} required /> */}
+        <input
+          name="name"
+          placeholder="Name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          name="number"
+          placeholder="Mobile Number"
+          value={formData.number}
+          onChange={handleChange}
+          required
+        />
+
         <button type="submit">Register</button>
       </form>
     </div>
-  );
+  </div>
+);
+
 };
 
 export default Register;

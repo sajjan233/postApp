@@ -32,7 +32,7 @@ const AdminLogin = () => {
 
     try {
       const response = await adminAPI.login(formData);
-      const { token, user } = response.data;
+      const { token, user ,referralCode} = response.data;
 
       // Store token and user info
       localStorage.setItem('token', token);

@@ -93,7 +93,8 @@ exports.login = async (req, res) => {
         phone: user.phone,
         role: user.role,
         shopName: user.shopName,
-        adminKey: user.adminKey
+        adminKey: user.adminKey,
+        referralCode:user.referralCode
       }
     });
   } catch (error) {

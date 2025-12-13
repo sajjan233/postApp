@@ -131,3 +131,21 @@
 }
 
 
+.dashboard-tabs {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.tab {
+  padding: 8px 18px;
+  border-radius: 6px;
+  background: #222;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: #4f46e5;
+}

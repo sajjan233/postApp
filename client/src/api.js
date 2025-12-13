@@ -66,6 +66,11 @@ export const categoryAPI = {
 
 };
 
+export const referralAPI = {
+  // POST referral scan
+  scan: (referralCode, newUserId) =>
+    api.post('/referral/scan', { referralCode, newUserId })
+};
 
 
 export default api;

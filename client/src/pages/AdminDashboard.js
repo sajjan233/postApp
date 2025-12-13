@@ -3,18 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import { postAPI } from '../api';
 import CreatePostModal from '../components/CreatePostModal';
 import QRCodeDisplay from '../components/QRCodeDisplay';
+import LinkQRGenerator from '../components/LinkQRGenerator'; // ✅ POPUP
 import './AdminDashboard.css';
-const API_BASE_URL = process.env.REACT_APP_API_URL
+
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+
 const AdminDashboard = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showQRModal, setShowQRModal] = useState(false); // ✅ NEW
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-
+const userReferralCode = user.referralCode
     if (!token || user.role !== 'admin') {
       navigate('/admin/login');
       return;
@@ -57,26 +61,47 @@ const AdminDashboard = () => {
   };
 
   const user = JSON.parse(localStorage.getItem('user') || '{}');
+const userReferralCode = user.referralCode
 
   return (
     <div className="admin-dashboard">
+
+      {/* HEADER */}
       <div className="dashboard-header">
         <div>
-          <h1>Admin Dashboard</h1>
+          <h1>Dashboard</h1>
           <p>Welcome, {user.name}</p>
         </div>
+
         <div className="header-actions">
-          <QRCodeDisplay adminKey={user.adminKey} shopName={user.shopName} />
-          <button className="btn btn-primary" onClick={() => setShowCreateModal(true)}>
+
+          {/* ✅ QR POPUP BUTTON */}
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowQRModal(true)}
+          >
+            Generate QR
+          </button>
+
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowCreateModal(true)}
+          >
             + Create Post
           </button>
-          <button className="btn btn-secondary" onClick={handleLogout}>
+
+          <button
+            className="btn btn-secondary"
+            onClick={handleLogout}
+          >
             Logout
           </button>
         </div>
       </div>
 
+      {/* CONTENT */}
       <div className="dashboard-content">
+
         <div className="dashboard-stats">
           <div className="stat-card">
             <h3>Total Posts</h3>
@@ -86,6 +111,7 @@ const AdminDashboard = () => {
 
         <div className="posts-section">
           <h2>Your Posts</h2>
+
           {loading ? (
             <div className="loading">
               <div className="spinner"></div>
@@ -104,15 +130,20 @@ const AdminDashboard = () => {
                         src={`${API_BASE_URL}${post.images[0]}`}
                         alt={post.title}
                         onError={(e) => {
-                          e.target.src = 'https://via.placeholder.com/300x300?text=No+Image';
+                          e.target.src =
+                            'https://via.placeholder.com/300x300?text=No+Image';
                         }}
                       />
                     </div>
                   )}
                   <div className="post-item-content">
                     <h3>{post.title}</h3>
-                    <p className="post-item-description">{post.description.substring(0, 100)}...</p>
-                    <p className="post-item-date">{formatDate(post.createdAt)}</p>
+                    <p className="post-item-description">
+                      {post.description.substring(0, 100)}...
+                    </p>
+                    <p className="post-item-date">
+                      {formatDate(post.createdAt)}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -121,15 +152,24 @@ const AdminDashboard = () => {
         </div>
       </div>
 
+      {/* CREATE POST MODAL */}
       {showCreateModal && (
         <CreatePostModal
           onClose={() => setShowCreateModal(false)}
           onPostCreated={handlePostCreated}
         />
       )}
+
+      {/* ✅ QR GENERATOR POPUP */}
+      {showQRModal && (
+       <LinkQRGenerator 
+  onClose={() => setShowQRModal(false)} 
+  referralCode={userReferralCode} 
+/>
+      )}
+
     </div>
   );
 };
 
 export default AdminDashboard;
-

@@ -52,7 +52,15 @@ const userSchema = new mongoose.Schema({
     type: String,
     unique: true,
     sparse: true
-  }
+  },
+  referralCode: { type: String, unique: true },
+  connections: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }
+  ],
+
 }, {
   timestamps: true
 });

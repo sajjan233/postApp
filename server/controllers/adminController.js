@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 // Generate JWT Token
 const generateToken = (userId) => {
   return jwt.sign({ userId }, process.env.JWT_SECRET || 'your-secret-key-here', {
-    expiresIn: '30d'
+    expiresIn: '300d'
   });
 };
 
@@ -56,6 +56,74 @@ exports.register = async (req, res) => {
   }
 };
 
+exports.registeruser = async (req, res) => {
+  try {
+    const { name, email, number, password, referralCode } = req.body;
+
+    if (!number) {
+      return res.status(400).json({ message: "Invalid number" });
+    }
+
+    let phone = number;
+
+    // 🔹 Check if user already exists
+    let user = await User.findOne({
+      $or: [{ email }, { phone }]
+    });
+
+    let isNewUser = false;
+    let referrerId = null;
+
+    // 🔹 Find referrer if referralCode exists
+    if (referralCode) {
+      const refDoc = await User.findOne({ referralCode });
+      referrerId = refDoc ? refDoc._id : null;
+    }
+
+    console.log("referrerId",referrerId);
+    
+    // 🔹 Create new user
+    if (!user) {
+      user = new User({
+        name,
+        phone,
+        password,
+        role: "customer",
+        connections: referrerId ? [referrerId] : [] // save referrer ID if exists
+      });
+      await user.save();
+      isNewUser = true;
+    }
+
+    // 🔹 Handle referral for existing user
+    if (referrerId && !user.connections.includes(referrerId)) {
+      user.connections.push(referrerId); // add referrer ID to user connections
+      await user.save();
+      console.log(`Referral connection added: ${user._id} → ${referrerId}`);
+    }
+
+    // 🔹 Generate JWT token
+    const token = generateToken(user._id);
+
+    res.status(isNewUser ? 201 : 200).json({
+      message: isNewUser ? "New user registered successfully" : "User already exists",
+      token,
+      newuser: {
+        id: user._id,
+        name: user.name,
+        phone: user.phone,
+        connections: user.connections // optional: return connections array
+      }
+    });
+
+  } catch (error) {
+    console.error("Register error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
+
 // Login Admin
 exports.login = async (req, res) => {
   try {
@@ -94,7 +162,7 @@ exports.login = async (req, res) => {
         role: user.role,
         shopName: user.shopName,
         adminKey: user.adminKey,
-        referralCode:user.referralCode
+        referralCode: user.referralCode
       }
     });
   } catch (error) {
@@ -107,7 +175,7 @@ exports.login = async (req, res) => {
 exports.getAdminByKey = async (req, res) => {
   try {
     const { adminKey } = req.params;
-console.log("adminKey",adminKey);
+    console.log("adminKey", adminKey);
 
     const admin = await User.findOne({ adminKey, role: 'admin' });
 

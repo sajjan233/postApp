@@ -53,7 +53,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     sparse: true
   },
-  referralCode: { type: String, unique: true },
+  referralCode: { type: String},
   connections: [
     {
       type: mongoose.Schema.Types.ObjectId,

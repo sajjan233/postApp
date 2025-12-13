@@ -26,6 +26,7 @@ api.interceptors.request.use(
 // Admin APIs
 export const adminAPI = {
   register: (data) => api.post('/admin/register', data),
+  userregister: (data) => api.post('/admin/userregister', data),
   login: (data) => api.post('/admin/login', data),
   getByKey: (adminKey) => api.get(`/admin/by/${adminKey}`),
 };

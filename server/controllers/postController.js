@@ -64,28 +64,14 @@ exports.createPost = async (req, res) => {
 // Get Feed for Customer
 exports.getFeed = async (req, res) => {
   try {
-    const { customerId } = req.query;
 
-    let adminIds
-    if (customerId != 'null') {
-      const mappings = await CustomerAdminMap.find({ customerId });
-      adminIds = mappings.map(m => m.adminId);
+    const allAdminIds = [...req.user.connections,'6921c18a71c8817b35046318'];
 
-    } else {
-      adminIds = await User.distinct('_id', { role: { $in: ['masterAdmin', 'admin'] } });
-
-    }
-
-
-
-    const allAdminIds = [...adminIds];
-
-    console.log("allAdminIds", allAdminIds);
     let filter = {}
     if (allAdminIds.length) {
       filter = { adminId: { $in: allAdminIds } }
     }
-
+    
     const posts = await Post.find(filter)
       .populate('adminId', 'name shopName')
       .populate('categoryId', 'name slug') // populate category

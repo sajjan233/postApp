@@ -28,6 +28,7 @@ const postRoutes = require('./routes/postRoutes');
 const adminSearchRoutes = require('./routes/adminSearchRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const referrlRoutes = require('./routes/referralRoutes');
+const querylRoutes = require('./routes/queryRoutes');
 const path = require('path');
 
 app.use('/admin', adminRoutes);
@@ -36,6 +37,7 @@ app.use('/posts', postRoutes);
 app.use('/admins', adminSearchRoutes);
 app.use('/category', categoryRoutes);
 app.use('/referr', referrlRoutes);
+app.use('/query', querylRoutes);
 
 
 

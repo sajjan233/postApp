@@ -8,7 +8,11 @@ import MasterAdminDashboard from './pages/MasterAdminDashboard';
 import AdminLogin from './pages/AdminLogin';
 import AdminRegister from './pages/AdminRegister';
 import Register from './pages/Register';
+
+
 import './App.css';
+import QueryPage from './pages/QueryPage';
+import MasterQuerySection from './pages/MasterQuerySection';
 
 function App() {
   return (
@@ -17,7 +21,9 @@ function App() {
         <Routes>
           <Route path="/" element={<AdminLogin />} />
           <Route path="/feed" element={<Feed />} />
-           {/* <Route path="/register" element={<Register />} /> */}
+          <Route path="/queries" element={<QueryPage />} />
+          <Route path="/all/queries" element={<MasterQuerySection />} />
+          {/* <Route path="/register" element={<Register />} /> */}
           <Route path="/post/:id" element={<PostDetails />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/register" element={<AdminRegister />} />

@@ -1,0 +1,92 @@
+.master-query-list {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 15px;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px; /* optional, card को soft corner देने के लिए */
+  color: #fff; /* text color gradient पर ठीक दिखने के लिए */
+}
+
+
+.master-query-list h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.master-query-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: #f9f9f9;
+}
+
+.master-query-card p {
+  margin: 5px 0;
+}
+
+.status-update,
+.admin-reply {
+  margin-top: 10px;
+}
+
+.status-update label,
+.admin-reply label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.status-update select,
+.admin-reply textarea {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.admin-reply textarea {
+  resize: vertical;
+}
+
+.master-query-card button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.master-query-card button:hover {
+  background-color: #0056b3;
+}
+
+/* Status color styling */
+.status {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.status.pending {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.status.replied {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.status.closed {
+  background-color: #dc3545;
+  color: #fff;
+}

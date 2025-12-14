@@ -82,6 +82,25 @@ export const referralAPI = {
     api.post('/referral/scan', { referralCode, newUserId })
 };
 
+// ================= QUERY APIs =================
+
+// User side
+
+
+// Admin side (token required)
+export const queryAPI = {
+  // sab queries dekhe
+  getAll: () => api.get('/queries'),
+  getMyQueries: (userToken) =>
+    api.get(`/query/my`),
+ createQuery: (data) =>
+    api.post("/query/create", data),
+
+  // status + admin comment update
+getAllQueries: () => api.get("/query/all"),
+  updateQuery: (id, data) => api.put(`/query/update/${id}`, data)
+};
+
 
 export default api;
 

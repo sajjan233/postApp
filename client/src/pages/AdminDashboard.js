@@ -74,6 +74,10 @@ const AdminDashboard = () => {
         </div>
 
         <div className="header-actions">
+           
+            <button className="btn btn-primary" onClick={() => navigate(`/queries`)}>
+          Any Query
+          </button>
           <button className="btn btn-primary" onClick={() => setShowQRModal(true)}>
             Generate QR
           </button>

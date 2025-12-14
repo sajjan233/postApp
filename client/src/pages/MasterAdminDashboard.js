@@ -71,6 +71,9 @@ const MasterAdminDashboard = () => {
           <p>Welcome, {user.name}</p>
         </div>
         <div className="header-actions">
+          <button className="btn btn-primary" onClick={() => navigate(`/all/queries`)}>
+            All Query
+          </button>
           <button className="btn btn-primary" onClick={() => setShowCreateModal(true)}>
             + Create Global Post
           </button>

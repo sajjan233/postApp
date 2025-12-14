@@ -54,7 +54,7 @@ const AdminLogin = () => {
   return (
     <div className="admin-login">
       <div className="admin-login-container">
-        <h1>Admin Login</h1>
+        <h1>POST24 LOGIN</h1>
         <p>Login to manage your posts</p>
 
         {error && <div className="error">{error}</div>}

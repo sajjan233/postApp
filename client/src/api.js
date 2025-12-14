@@ -41,14 +41,23 @@ export const postAPI = {
   getFeed: (customerId) => api.get(`/posts/feed?customerId=${customerId}`),
   getPost: (id) => api.get(`/posts/${id}`),
   createPost: (formData) => {
-    console.log("formData",formData);
-    
     return api.post('/posts/create', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
   },
+
+  updatePost: (id, formData) => {
+    console.log("formData", formData);
+
+    return api.put(`/posts/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
+
   getAdminPosts: () => api.get('/posts/admin/my-posts'),
   getAllPosts: () => api.get('/posts/admin/all-posts'),
   getByCategory: (categoryId) => api.get(`/posts/category/${categoryId}`),

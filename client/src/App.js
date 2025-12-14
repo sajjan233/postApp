@@ -15,9 +15,9 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={<Feed />} />
+          <Route path="/" element={<AdminLogin />} />
           <Route path="/feed" element={<Feed />} />
-           <Route path="/register" element={<Register />} />
+           {/* <Route path="/register" element={<Register />} /> */}
           <Route path="/post/:id" element={<PostDetails />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/register" element={<AdminRegister />} />

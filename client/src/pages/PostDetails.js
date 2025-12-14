@@ -69,8 +69,13 @@ const PostDetails = () => {
   }
 
   return (
+    
     <div className="post-details">
-
+<div className="post-details-header">
+  <button className="back-btn" onClick={() => navigate(-1)}>
+    ← Back
+  </button>
+</div>
 
       <div className="post-details-content">
         <div className="post-details-admin">

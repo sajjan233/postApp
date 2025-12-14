@@ -1,92 +1,92 @@
-.post-details {
-  min-height: 100vh;
-  background: #f5f5f5;
+html, body {
+  max-width: 100%;
+  overflow-x: hidden; /* ✅ left-right scroll बंद */
 }
 
+.post-details {
+  min-height: 100vh;
+  background: var(--background, #f5f5f5);
+}
+
+/* HEADER */
 .post-details-header {
-  background: white;
-  padding: 15px 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: var(--header-bg, #ffffff);
+  padding: 12px 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
 .back-btn {
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   cursor: pointer;
-  color: #007bff;
-  padding: 5px 10px;
+  color: var(--primary, #007bff);
 }
 
-.back-btn:hover {
-  text-decoration: underline;
-}
-
-.post-details-header h1 {
-  font-size: 1.5rem;
-  color: #333;
-}
-
+/* CONTENT WRAPPER */
 .post-details-content {
   max-width: 900px;
-  margin: 0 auto;
+  margin: 12px auto;
   padding: 10px;
 }
 
+/* ADMIN INFO */
 .post-details-admin {
-  background: white;
+  background: var(--card-bg, #ffffff);
   border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 16px;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
-  gap: 15px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  gap: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .admin-avatar-large {
-  width: 60px;
-  height: 60px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--primary, #4f46e5);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: #fff;
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 
 .post-details-admin h2 {
   margin: 0;
-  color: #333;
-  font-size: 1.3rem;
+  font-size: 1.05rem;
+  color: var(--text-main, #333);
 }
 
 .post-details-admin p {
-  margin: 5px 0 0 0;
-  color: #666;
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted, #666);
 }
 
+/* IMAGE SECTION */
 .post-details-images {
-  background: white;
+  background: var(--card-bg, #ffffff);
   border-radius: 12px;
-  padding: 2px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 6px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .image-container-large {
   position: relative;
   width: 100%;
   max-width: 600px;
-  margin: 0 auto;
-  aspect-ratio: 3/4;
+  margin: auto;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 .image-container-large img {
@@ -95,86 +95,73 @@
   object-fit: cover;
 }
 
+/* IMAGE NAV */
 .image-nav-large {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
   border: none;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  font-size: 2rem;
+  font-size: 1.8rem;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  transition: background 0.3s;
 }
 
-.image-nav-large:hover {
-  background: rgba(0, 0, 0, 0.8);
-}
+.image-nav-large.prev { left: 10px; }
+.image-nav-large.next { right: 10px; }
 
-.image-nav-large.prev {
-  left: 15px;
-}
-
-.image-nav-large.next {
-  right: 15px;
-}
-
+/* DOTS */
 .image-indicators-large {
   position: absolute;
-  bottom: 15px;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 10px;
-  z-index: 10;
+  gap: 6px;
 }
 
 .image-indicators-large span {
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
-  cursor: pointer;
-  transition: background 0.3s;
+  background: rgba(255,255,255,0.5);
 }
 
 .image-indicators-large span.active {
-  background: white;
+  background: #fff;
 }
 
+/* TEXT */
 .post-details-text {
-  background: white;
+  background: var(--card-bg, #ffffff);
   border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 18px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .post-details-text h1 {
-  font-size: 2rem;
-  margin-bottom: 15px;
-  color: #333;
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: var(--text-main, #333);
 }
 
 .post-description {
-  font-size: 1.1rem;
-  line-height: 1.8;
-  color: #555;
-  margin-bottom: 20px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-main, #555);
   white-space: pre-wrap;
 }
 
 .post-date {
-  color: #999;
-  font-size: 0.9rem;
+  margin-top: 10px;
+  font-size: 0.75rem;
+  color: var(--text-muted, #999);
 }
 
+/* LOADING / ERROR */
 .post-details-loading,
 .post-details-error {
   min-height: 100vh;
@@ -182,13 +169,73 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #f5f5f5;
-  padding: 20px;
-}
-
-.post-details-loading p {
-  margin-top: 20px;
-  color: #666;
+  background: var(--background, #f5f5f5);
 }
 
 
+/* =======================
+   MOBILE VIEW FIX
+   ======================= */
+
+
+@media (max-width: 600px) {
+  * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  /* 🔴 Header height कम + back hide */
+  .post-details-header {
+    padding: 6px 10px;
+    min-height: auto;
+  }
+
+  .back-btn {
+    display: none; /* ✅ mobile me back hide */
+  }
+
+  /* 🔴 Admin card compact */
+  .post-details-admin {
+    padding: 10px;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .admin-avatar-large {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .post-details-admin h2 {
+    font-size: 0.9rem;
+  }
+
+  .post-details-admin p {
+    font-size: 0.7rem;
+  }
+
+  /* 🔴 Content padding kam */
+  .post-details-content {
+    padding: 6px;
+    margin: 6px auto;
+  }
+
+  /* 🔴 Image container mobile optimized */
+  .image-container-large {
+    max-width: 100%;
+    border-radius: 8px;
+  }
+
+  /* 🔴 Text compact */
+  .post-details-text {
+    padding: 12px;
+  }
+
+  .post-details-text h1 {
+    font-size: 1.1rem;
+  }
+
+  .post-description {
+    font-size: 0.85rem;
+  }
+}

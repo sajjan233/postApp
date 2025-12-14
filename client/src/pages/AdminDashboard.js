@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postAPI } from '../api';
 import CreatePostModal from '../components/CreatePostModal';
-import QRCodeDisplay from '../components/QRCodeDisplay';
-import LinkQRGenerator from '../components/LinkQRGenerator'; // ✅ POPUP
+import UpdatePostModal from '../components/UpdatePostModal'; // ✅ Update Modal import
+import LinkQRGenerator from '../components/LinkQRGenerator';
 import './AdminDashboard.css';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
@@ -12,13 +12,15 @@ const AdminDashboard = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showQRModal, setShowQRModal] = useState(false); // ✅ NEW
+  const [showQRModal, setShowQRModal] = useState(false);
+  const [editPost, setEditPost] = useState(null);
   const navigate = useNavigate();
+
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const userReferralCode = user.referralCode;
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-const userReferralCode = user.referralCode
     if (!token || user.role !== 'admin') {
       navigate('/admin/login');
       return;
@@ -44,8 +46,9 @@ const userReferralCode = user.referralCode
     navigate('/admin/login');
   };
 
-  const handlePostCreated = () => {
+  const handlePostCreatedOrUpdated = () => {
     setShowCreateModal(false);
+    setEditPost(null);
     loadPosts();
   };
 
@@ -60,9 +63,6 @@ const userReferralCode = user.referralCode
     });
   };
 
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-const userReferralCode = user.referralCode
-
   return (
     <div className="admin-dashboard">
 
@@ -74,26 +74,15 @@ const userReferralCode = user.referralCode
         </div>
 
         <div className="header-actions">
-
-          {/* ✅ QR POPUP BUTTON */}
-          <button
-            className="btn btn-primary"
-            onClick={() => setShowQRModal(true)}
-          >
+          <button className="btn btn-primary" onClick={() => setShowQRModal(true)}>
             Generate QR
           </button>
 
-          <button
-            className="btn btn-primary"
-            onClick={() => setShowCreateModal(true)}
-          >
+          <button className="btn btn-primary" onClick={() => setShowCreateModal(true)}>
             + Create Post
           </button>
 
-          <button
-            className="btn btn-secondary"
-            onClick={handleLogout}
-          >
+          <button className="btn btn-secondary" onClick={handleLogout}>
             Logout
           </button>
         </div>
@@ -113,9 +102,7 @@ const userReferralCode = user.referralCode
           <h2>Your Posts</h2>
 
           {loading ? (
-            <div className="loading">
-              <div className="spinner"></div>
-            </div>
+            <div className="loading"><div className="spinner"></div></div>
           ) : posts.length === 0 ? (
             <div className="no-posts">
               <p>No posts yet. Create your first post!</p>
@@ -123,27 +110,41 @@ const userReferralCode = user.referralCode
           ) : (
             <div className="posts-grid">
               {posts.map((post) => (
-                <div key={post._id} className="post-item">
+                <div
+                  key={post._id}
+                  className="post-item"
+                  onClick={() => navigate(`/post/${post._id}`)}
+                  style={{ cursor: 'pointer' }}
+                >
                   {post.images && post.images.length > 0 && (
                     <div className="post-item-image">
                       <img
                         src={`${API_BASE_URL}${post.images[0]}`}
                         alt={post.title}
                         onError={(e) => {
-                          e.target.src =
-                            'https://via.placeholder.com/300x300?text=No+Image';
+                          e.target.src = 'https://via.placeholder.com/300x300?text=No+Image';
                         }}
                       />
                     </div>
                   )}
+
                   <div className="post-item-content">
                     <h3>{post.title}</h3>
-                    <p className="post-item-description">
-                      {post.description.substring(0, 100)}...
-                    </p>
-                    <p className="post-item-date">
-                      {formatDate(post.createdAt)}
-                    </p>
+                    <p className="post-item-description">{post.description.substring(0, 100)}...</p>
+                    <p className="post-item-date">{formatDate(post.createdAt)}</p>
+                  </div>
+
+                  {/* ACTIONS */}
+                  <div className="post-actions">
+                    <button
+                      className="edit-btn"
+                      onClick={(e) => {
+                        e.stopPropagation(); // important
+                        setEditPost(post);
+                      }}
+                    >
+                      ✏️ Edit
+                    </button>
                   </div>
                 </div>
               ))}
@@ -156,16 +157,25 @@ const userReferralCode = user.referralCode
       {showCreateModal && (
         <CreatePostModal
           onClose={() => setShowCreateModal(false)}
-          onPostCreated={handlePostCreated}
+          onPostCreated={handlePostCreatedOrUpdated}
         />
       )}
 
-      {/* ✅ QR GENERATOR POPUP */}
+      {/* UPDATE POST MODAL */}
+      {editPost && (
+        <UpdatePostModal
+          post={editPost}
+          onClose={() => setEditPost(null)}
+          onPostUpdated={handlePostCreatedOrUpdated}
+        />
+      )}
+
+      {/* QR GENERATOR POPUP */}
       {showQRModal && (
-       <LinkQRGenerator 
-  onClose={() => setShowQRModal(false)} 
-  referralCode={userReferralCode} 
-/>
+        <LinkQRGenerator
+          onClose={() => setShowQRModal(false)}
+          referralCode={userReferralCode}
+        />
       )}
 
     </div>

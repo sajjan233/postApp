@@ -61,6 +61,63 @@ exports.createPost = async (req, res) => {
   }
 };
 
+exports.updatePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description, categoryId } = req.body;
+    
+    // existingImages को parse करें (array या single string)
+    let existingImages = req.body.existingImages || [];
+    if (typeof existingImages === "string") {
+      existingImages = [existingImages];
+    } else if (typeof existingImages === "object" && !Array.isArray(existingImages)) {
+      existingImages = Object.values(existingImages); // multer formData से आ सकता है
+    }
+
+    const adminId = req.user._id;
+
+    // Find post
+    const post = await Post.findById(id);
+    if (!post) return res.status(404).json({ message: "Post not found" });
+
+    // Check ownership
+    if (post.adminId.toString() !== adminId.toString()) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    // Update text fields
+    if (title) post.title = title;
+    if (description) post.description = description;
+    if (categoryId) post.categoryId = categoryId;
+
+    // Handle new uploaded images
+    
+
+    let newImages = [];
+    if (req.files && req.files.length > 0) {
+      newImages = req.files.map(file => `/uploads/${file.filename}`);
+    }
+
+    // Combine existing + new images
+    const finalImages = [...existingImages, ...newImages];
+
+    // Max 3 images
+    if (finalImages.length > 3) {
+      return res.status(400).json({ message: "Maximum 3 images allowed" });
+    }
+
+    post.images = finalImages;
+
+    await post.save();
+
+    res.status(200).json({ message: "Post updated successfully", post });
+
+  } catch (error) {
+    console.error("Update post error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 // Get Feed for Customer
 exports.getFeed = async (req, res) => {
   try {

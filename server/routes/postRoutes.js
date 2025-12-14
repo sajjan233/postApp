@@ -4,7 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const sharp = require("sharp");
-const { createPost, getFeed, getPost, getAdminPosts, getAllPosts, getPostsByCategory,createImgPost } = require('../controllers/postController.js');
+const { createPost, getFeed, getPost, getAdminPosts, getAllPosts, getPostsByCategory,createImgPost, updatePost } = require('../controllers/postController.js');
 const { auth, requireRole } = require('../middleware/auth');
 
 // Create uploads directory if it doesn't exist
@@ -38,8 +38,7 @@ const compressImagesMiddleware = async (req, res, next) => {
     if (!req.files || req.files.length === 0) return next();
 
     const compressedFiles = [];
-
-    for (let file of req.files) {
+    for (let file of req.files) {      
       const filename = `img-${Date.now()}-${Math.round(Math.random() * 1E9)}.webp`;
       const outputPath = path.join(uploadsDir, filename);
 
@@ -90,6 +89,16 @@ router.post(
   compressImagesMiddleware,
   createPost
 );
+
+router.put(
+  "/:id",
+  auth,
+  uploadMiddleware,
+  compressImagesMiddleware,
+  updatePost
+);
+
+
 // No change for GET routes, populate category in controller handles it
 router.get('/feed',auth, getFeed);
 router.get('/:id', getPost);

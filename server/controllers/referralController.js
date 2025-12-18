@@ -2,6 +2,9 @@ const User = require("../models/User");
 
 exports.scanReferral = async (req, res) => {
   try {
+    console.log("req.body",req.body);
+    console.log("req.user",req.user);
+    
     const { referralCode } = req.body;
     const currentUserId = req.user._id; // JWT se
 

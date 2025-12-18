@@ -2,6 +2,7 @@
 
 const Category = require("../models/Category.js");
 const slugify = require("slugify");
+const User = require("../models/User.js");
 
 // CREATE CATEGORY
 exports.createCategory = async (req, res) => {
@@ -36,16 +37,27 @@ exports.createCategory = async (req, res) => {
 
 
 // GET ALL CATEGORIES
+// exports.getCategories = async (req, res) => {
+//   try {
+
+//     let filter = {parent: null,status:'active'}
+
+//     if(req.query.parentid){
+//       filter.parent  = req.query.parentid
+//     }
+//     const categories = await Category.find(filter).sort({ name: -1 });
+//     res.status(200).json(categories);
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// };
+
+
 exports.getCategories = async (req, res) => {
   try {
 
-    let filter = {parent: null,status:'active'}
-
-    if(req.query.parentid){
-      filter.parent  = req.query.parentid
-    }
-    const categories = await Category.find(filter).sort({ name: -1 });
-    res.status(200).json(categories);
+    const categories = await User.findById(req.user._id).populate('connections')
+    res.status(200).json(categories.connections);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

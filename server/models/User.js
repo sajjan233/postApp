@@ -65,6 +65,29 @@ const userSchema = new mongoose.Schema({
   timestamps: true
 });
 
+export function generateUniqueCode(name, phone) {
+  let oddLetters = '';
+  let evenNumbers = '';
+
+  // Process name: take letters at odd ASCII codes
+  for (let i = 0; i < name.length; i++) {
+    const charCode = name.charCodeAt(i);
+    if (charCode % 2 !== 0) {
+      oddLetters += name[i];
+    }
+  }
+
+  // Process phone: take even digits
+  for (let digit of phone) {
+    if (parseInt(digit) % 2 === 0) {
+      evenNumbers += digit;
+    }
+  }
+
+  // Combine: letters first, numbers last
+  return oddLetters + evenNumbers;
+}
+
 // Hash password before saving
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
@@ -85,6 +108,13 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
+userSchema.pre('save',async function() {
+  if(this.role == 'admin'){
+    const uniqueCode = generateUniqueCode(this.shopName ? this.shopName : this.name, this.phone);
+    this.referralCode = uniqueCode
+  }
+  next();
+})
 // Generate customerId for customer users
 userSchema.pre('save', async function(next) {
   if (this.role === 'customer' && !this.customerId) {

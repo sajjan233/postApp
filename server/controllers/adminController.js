@@ -177,7 +177,7 @@ exports.getAdminByKey = async (req, res) => {
     const { adminKey } = req.params;
     console.log("adminKey", adminKey);
 
-    const admin = await User.findOne({ adminKey, role: 'admin' });
+    const admin = await User.findOne({ referralCode :adminKey, role: 'admin' });
 
     if (!admin) {
       return res.status(404).json({ message: 'Admin not found' });

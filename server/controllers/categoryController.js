@@ -57,6 +57,8 @@ exports.getCategories = async (req, res) => {
   try {
 
     const categories = await User.findById(req.user._id).populate('connections')
+    console.log("categories.connections",categories.connections);
+    
     res.status(200).json(categories.connections);
   } catch (err) {
     res.status(500).json({ error: err.message });

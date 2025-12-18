@@ -67,9 +67,7 @@ exports.registeruser = async (req, res) => {
     let phone = number;
 
     // 🔹 Check if user already exists
-    let user = await User.findOne({
-      $or: [{ email }, { phone }]
-    });
+    let user = await User.findOne( { phone });
 
     let isNewUser = false;
     let referrerId = null;

@@ -9,8 +9,8 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
     categoryId: ''   // this is subcategory if selected
   });
 
-  const [mainCategories, setMainCategories] = useState([]);
-  const [subCategories, setSubCategories] = useState([]);
+  // const [mainCategories, setMainCategories] = useState([]);
+  // const [subCategories, setSubCategories] = useState([]);
   const [selectedMainCategory, setSelectedMainCategory] = useState(""); // main category
 
   const [images, setImages] = useState([]);
@@ -18,21 +18,21 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
   const [error, setError] = useState(null);
 
   // Load main categories
-  useEffect(() => {
-    categoryAPI.getList()
-      .then((res) => setMainCategories(res.data))
-      .catch(() => setError("Failed to load categories"));
-  }, []);
+  // useEffect(() => {
+  //   categoryAPI.getList()
+  //     .then((res) => setMainCategories(res.data))
+  //     .catch(() => setError("Failed to load categories"));
+  // }, []);
 
   // Fetch sub categories by parentId
-  const loadSubCategories = async (parentId) => {
-    try {
-      const res = await categoryAPI.getByParent(parentId);
-      setSubCategories(res.data);
-    } catch (err) {
-      setSubCategories([]);
-    }
-  };
+  // const loadSubCategories = async (parentId) => {
+  //   try {
+  //     const res = await categoryAPI.getByParent(parentId);
+  //     setSubCategories(res.data);
+  //   } catch (err) {
+  //     setSubCategories([]);
+  //   }
+  // };
 
   // When main category changes
   const handleMainCategoryChange = async (e) => {
@@ -46,11 +46,7 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
       categoryId: ""
     });
 
-    if (id) {
-      await loadSubCategories(id);
-    } else {
-      setSubCategories([]);
-    }
+   
   };
 
   // Handle text input changes
@@ -95,18 +91,18 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
     try {
       // If subcategory selected -> use that
       // else use main category
-      const finalCategoryId = formData.categoryId || selectedMainCategory;
+      // const finalCategoryId = formData.categoryId || selectedMainCategory;
 
-      if (!finalCategoryId) {
-        setError("Please select at least Main Category.");
-        setLoading(false);
-        return;
-      }
+      // if (!finalCategoryId) {
+      //   setError("Please select at least Main Category.");
+      //   setLoading(false);
+      //   return;
+      // }
 
       const formDataToSend = new FormData();
       formDataToSend.append("title", formData.title);
       formDataToSend.append("description", formData.description);
-      formDataToSend.append("categoryId", finalCategoryId);
+      // formDataToSend.append("categoryId", finalCategoryId);
 
       images.forEach((image) => {
         formDataToSend.append("images", image);
@@ -156,15 +152,15 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
           />
 
           {/* MAIN CATEGORY */}
-          <select className="input" onChange={handleMainCategoryChange}>
+          {/* <select className="input" onChange={handleMainCategoryChange}>
             <option value="">Select Main Category *</option>
             {mainCategories.map((cat) => (
               <option key={cat._id} value={cat._id}>{cat.name}</option>
             ))}
-          </select>
+          </select> */}
 
           {/* SUB CATEGORY (optional) */}
-          <select
+          {/* <select
             name="categoryId"
             className="input"
             value={formData.categoryId}
@@ -175,7 +171,7 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
             {subCategories.map((sub) => (
               <option key={sub._id} value={sub._id}>{sub.name}</option>
             ))}
-          </select>
+          </select> */}
 
           {/* IMAGE UPLOAD */}
           <div className="image-upload-section">

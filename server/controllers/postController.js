@@ -10,15 +10,6 @@ exports.createPost = async (req, res) => {
     const { title, description, categoryId } = req.body; // include categoryId
     const adminId = req.user._id;
 
-    if (!categoryId) {
-      return res.status(400).json({ message: 'categoryId is required' });
-    }
-
-    // Validate category exists
-    const category = await Category.findById(categoryId);
-    if (!category) {
-      return res.status(404).json({ message: 'Category not found' });
-    }
 
     // Handle file uploads (images)
     const images = [];

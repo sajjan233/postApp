@@ -13,7 +13,7 @@ const { auth } = require("../middleware/auth.js");
 
 router.post("/", createCategory);          // Create
 router.get("/", auth,getCategories);            // List all
-router.get("/list", getActiveCategories);            // List all
+router.get("/list",auth, getActiveCategories);            // List all
 router.get("/:id", getCategoryById);       // Single category
 router.put("/:id", updateCategory);        // Update
 router.delete("/:id", deleteCategory);     // Delete

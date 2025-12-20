@@ -193,9 +193,12 @@ exports.getPostsByCategory = async (req, res) => {
     }
 
     // Check if category exists
+const last24Hours = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
 
-    const posts = await Post.find({ adminId: categoryId })
+
+
+    const posts = await Post.find({ adminId: categoryId ,createdAt: { $gte: last24Hours }})
       .populate('adminId', 'name shopName')
       .populate('categoryId', 'name slug')
       .sort({ createdAt: -1 });

@@ -8,6 +8,28 @@ const generateToken = (userId) => {
   });
 };
 
+function generateUniqueCode(name, phone) {
+  let oddLetters = '';
+  let evenNumbers = '';
+
+  // Process name: take letters at odd ASCII codes
+  for (let i = 0; i < name.length; i++) {
+    const charCode = name.charCodeAt(i);
+    if (charCode % 2 !== 0) {
+      oddLetters += name[i];
+    }
+  }
+
+  // Process phone: take even digits
+  for (let digit of phone) {
+    if (parseInt(digit) % 2 === 0) {
+      evenNumbers += digit;
+    }
+  }
+
+  // Combine: letters first, numbers last
+  return oddLetters + evenNumbers;
+}
 // Register Admin
 exports.register = async (req, res) => {
   try {
@@ -67,7 +89,7 @@ exports.registeruser = async (req, res) => {
     let phone = number;
 
     // 🔹 Check if user already exists
-    let user = await User.findOne( { phone });
+    let user = await User.findOne({ phone });
 
     let isNewUser = false;
     let referrerId = null;
@@ -78,8 +100,8 @@ exports.registeruser = async (req, res) => {
       referrerId = refDoc ? refDoc._id : null;
     }
 
-    console.log("referrerId",referrerId);
-    
+    console.log("referrerId", referrerId);
+
     // 🔹 Create new user
     if (!user) {
       user = new User({
@@ -126,6 +148,7 @@ exports.registeruser = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log("email, password", email, password);
 
     if (!email || !password) {
       return res.status(400).json({ message: 'Email and password are required' });
@@ -136,6 +159,8 @@ exports.login = async (req, res) => {
       email: email.toLowerCase().trim(),
       role: { $in: ['admin', 'masterAdmin'] }
     });
+    console.log("useruser", user);
+
 
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
@@ -145,6 +170,11 @@ exports.login = async (req, res) => {
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    if (!user?.referralCode) {
+      user.referralCode = generateUniqueCode(user.shopName ? user.shopName : user.name, user.phone)
+      user.save()
     }
 
     const token = generateToken(user._id);
@@ -175,7 +205,7 @@ exports.getAdminByKey = async (req, res) => {
     const { adminKey } = req.params;
     console.log("adminKey", adminKey);
 
-    const admin = await User.findOne({ referralCode :adminKey, role: 'admin' });
+    const admin = await User.findOne({ referralCode: adminKey, role: 'admin' });
 
     if (!admin) {
       return res.status(404).json({ message: 'Admin not found' });

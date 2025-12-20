@@ -198,26 +198,13 @@ exports.getPostsByCategory = async (req, res) => {
     const { categoryId } = req.params;
 
     if (!categoryId) {
-      return res.status(400).json({ message: 'categoryId is required' });
+      return res.status(400).json({ message: 'provid is required' });
     }
 
     // Check if category exists
-    const category = await Category.findById(categoryId);
-    if (!category) {
-      return res.status(404).json({ message: 'Category not found' });
-    }
-    let allCate = await Category.distinct('_id', { parent: category.id })
-
-    if (allCate.length) {
-      allCate.push(category.id)
-    } else {
-      allCate = []
-      allCate.push(category.id)
-
-    }
 
 
-    const posts = await Post.find({ categoryId: { $in: allCate } })
+    const posts = await Post.find({ adminId: categoryId })
       .populate('adminId', 'name shopName')
       .populate('categoryId', 'name slug')
       .sort({ createdAt: -1 });

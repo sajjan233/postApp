@@ -65,7 +65,7 @@ const userSchema = new mongoose.Schema({
   timestamps: true
 });
 
-export function generateUniqueCode(name, phone) {
+ function generateUniqueCode(name, phone) {
   let oddLetters = '';
   let evenNumbers = '';
 

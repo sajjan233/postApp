@@ -210,7 +210,7 @@ exports.getPostsByCategory = async (req, res) => {
       .sort({ createdAt: -1 });
 
 
-    res.json({ category: category.name, posts });
+    res.json({posts});
   } catch (error) {
     console.error('Get posts by category error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });

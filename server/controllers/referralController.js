@@ -9,6 +9,8 @@ exports.scanReferral = async (req, res) => {
     const currentUserId = req.user._id; // JWT se
 
     const scannedUser = await User.findOne({ referralCode });
+    console.log("scannedUser",scannedUser);
+    
 
     if (!scannedUser) {
       return res.status(404).json({ message: "Invalid QR code" });

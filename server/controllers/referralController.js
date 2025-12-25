@@ -30,10 +30,10 @@ exports.scanReferral = async (req, res) => {
 
     // ✅ add connection both sides
     currentUser.connections.push(scannedUser._id);
-    scannedUser.connections.push(currentUser._id);
+
+    currentUser.connections = [...new Set(currentUser.connections)]
 
     await currentUser.save();
-    await scannedUser.save();
 
    return res.json({
       message: "Connected successfully",

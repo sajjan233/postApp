@@ -33,12 +33,14 @@ exports.scanReferral = async (req, res) => {
     await currentUser.save();
     await scannedUser.save();
 
-    res.json({
+   return res.json({
       message: "Connected successfully",
       connectedWith: scannedUser.name
     });
 
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    console.log("err",err);
+    
+   return  res.status(500).json({ message: "Server error" });
   }
 };

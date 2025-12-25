@@ -108,7 +108,7 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
-userSchema.pre('save',async function() {
+userSchema.pre('save',async function(next) {
   if(this.role == 'admin'){
     const uniqueCode = generateUniqueCode(this.shopName ? this.shopName : this.name, this.phone);
     this.referralCode = uniqueCode

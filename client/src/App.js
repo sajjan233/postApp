@@ -13,6 +13,8 @@ import Register from './pages/Register';
 import './App.css';
 import QueryPage from './pages/QueryPage';
 import MasterQuerySection from './pages/MasterQuerySection';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsConditions from './pages/TermsConditions';
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
           <Route path="/admin/register" element={<AdminRegister />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/master-admin/dashboard" element={<MasterAdminDashboard />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-conditions" element={<TermsConditions />} />
         </Routes>
       </div>
     </Router>

@@ -67,3 +67,23 @@ exports.selectAdmin = async (req, res) => {
 };
 
 
+exports.list = async (req,res) => {
+  let response = {
+    message : '',
+    status : 0
+  }
+  try {
+    console.log(req.user)
+    let list = await User.find({ role: 'customer' ,_id : {$ne : req.user._id}});
+    console.log("list",list);
+    
+    response.message = ''
+    response.status = 1
+    response.list = list
+    return res.json(response)
+  } catch (err) {
+    response.status = 0
+    response.message = err.message
+    return res.json(response)
+  }
+}

@@ -1,5 +1,5 @@
 // models/Chat.js
-import mongoose from "mongoose";
+const mongoose = require('mongoose')
 
 const chatSchema = new mongoose.Schema(
   {
@@ -25,6 +25,5 @@ const chatSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Chat = mongoose.model("Chat", chatSchema);
 
-export default Chat;
+module.exports = mongoose.model("Chat", chatSchema);

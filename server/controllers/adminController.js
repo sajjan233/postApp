@@ -81,6 +81,7 @@ exports.register = async (req, res) => {
 exports.registeruser = async (req, res) => {
   try {
     const { name, email, number, password, referralCode } = req.body;
+console.log("name, email, number,",name, email, number,);
 
     if (!number) {
       return res.status(400).json({ message: "Invalid number" });

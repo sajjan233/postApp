@@ -16,7 +16,6 @@ export async function handlePrivateMessage(data) {
   }
 
   try {
-    // Use mongoose.Types.ObjectId
     const saved = await Chat.create({
       messageId: `${Date.now()}-${Math.round(Math.random() * 1E9)}`,
       from: from,

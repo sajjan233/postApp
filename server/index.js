@@ -66,6 +66,8 @@ io.on("connection", (socket) => {
   socket.on("privateMessage", async (data) => {
 
     try {
+      console.log("data",data);
+      
       // 1️⃣ Save the message to DB
       const savedMessage = await handlePrivateMessage(data);
       if (!savedMessage) return;

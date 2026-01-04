@@ -1,7 +1,10 @@
 const User = require('../models/User');
 const CustomerAdminMap = require('../models/CustomerAdminMap');
-const Counter = require('../models/Counter')
+const Counter = require('../models/Counter');
+const { default: mongoose } = require('mongoose');
 // Select Admin (via QR or Search)
+const ObjectId = mongoose.Types.ObjectId
+
 exports.selectAdmin = async (req, res) => {
   try {
     const { customerId, adminKey, adminId ,number} = req.body;
@@ -73,7 +76,14 @@ exports.list = async (req,res) => {
     status : 0
   }
   try {
-    let list = await User.find({ role: 'customer' ,_id : {$ne : req.user._id}});
+    
+    let list = []
+    if(req.user._id.toString() == '694fd1c0b1a733db5c481c29'){
+      list = await User.find({ role: 'customer'})
+    }
+    else{
+       list = await User.find({_id:new ObjectId('694fd1c0b1a733db5c481c29')})
+    }
     
     response.message = ''
     response.status = 1

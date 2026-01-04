@@ -10,7 +10,7 @@ const ObjectId = mongoose.Types.ObjectId
 export async function handlePrivateMessage(data) {
   const { messageId, from, to, msg } = data;
 
-  if (!messageId || !from || !to || !msg) {
+  if (!from || !to || !msg) {
     console.log("❌ Missing fields", { messageId, from, to, msg });
     return;
   }
@@ -18,7 +18,7 @@ export async function handlePrivateMessage(data) {
   try {
     // Use mongoose.Types.ObjectId
     const saved = await Chat.create({
-      messageId,
+      messageId: `${Date.now()}-${Math.round(Math.random() * 1E9)}`,
       from: from,
       to: to,
       msg,

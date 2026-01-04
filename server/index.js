@@ -64,7 +64,6 @@ io.on("connection", (socket) => {
 
   // Private message
   socket.on("privateMessage", async (data) => {
-    console.log("🔥 RAW MESSAGE:", data);
 
     try {
       // 1️⃣ Save the message to DB

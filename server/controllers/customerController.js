@@ -73,9 +73,7 @@ exports.list = async (req,res) => {
     status : 0
   }
   try {
-    console.log(req.user)
     let list = await User.find({ role: 'customer' ,_id : {$ne : req.user._id}});
-    console.log("list",list);
     
     response.message = ''
     response.status = 1

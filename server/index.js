@@ -51,7 +51,7 @@ const PORT = process.env.PORT || 5000;
 const server = http.createServer(app);
 /* ===== SOCKET.IO ===== */
 const io = new Server(server, {
-  cors: { origin: "*", methods: ["GET", "POST"] },
+  cors: { origin: "*"},
 });
 
 

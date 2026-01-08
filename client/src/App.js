@@ -14,7 +14,9 @@ import './App.css';
 import QueryPage from './pages/QueryPage';
 import MasterQuerySection from './pages/MasterQuerySection';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import Safety from './pages/Safety';
 import TermsConditions from './pages/TermsConditions';
+import NewsContactPage from './pages/NewsInfo';
 
 function App() {
   return (
@@ -31,8 +33,10 @@ function App() {
           <Route path="/admin/register" element={<AdminRegister />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/master-admin/dashboard" element={<MasterAdminDashboard />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/terms-conditions" element={<TermsConditions />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/contact" element={<NewsContactPage />} />
+          <Route path="/safety" element={<Safety />} />
+          <Route path="/terms-conditions" element={<TermsConditions />} />
         </Routes>
       </div>
     </Router>

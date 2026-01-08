@@ -74,6 +74,48 @@ const PrivacyPolicy = () => {
           </p>
         </section>
 
+        {/* 🔒 CHILD SAFETY & CSAE SECTION (IMPORTANT) */}
+        <section style={styles.section} id="child-safety">
+          <h2 style={styles.heading}>Child Safety & CSAE Policy</h2>
+
+          <p style={styles.text}>
+            Post24 is committed to protecting children and preventing child
+            sexual abuse and exploitation (CSAE). We maintain a strict
+            zero-tolerance policy toward any content or behavior that harms,
+            exploits, or endangers minors.
+          </p>
+
+          <h3 style={styles.subHeading}>Prohibited Content</h3>
+          <ul style={styles.list}>
+            <li>Child sexual abuse material (CSAM)</li>
+            <li>Sexual or exploitative content involving minors</li>
+            <li>Child grooming, harassment, or abuse</li>
+          </ul>
+
+          <h3 style={styles.subHeading}>Safety Measures</h3>
+          <ul style={styles.list}>
+            <li>In-app reporting system for harmful or abusive content</li>
+            <li>Immediate review and removal of reported violations</li>
+            <li>Suspension or termination of offending accounts</li>
+            <li>Cooperation with law enforcement agencies when required</li>
+          </ul>
+
+          <h3 style={styles.subHeading}>Reporting Child Safety Concerns</h3>
+          <p style={styles.text}>
+            Users can report child safety concerns directly within the Post24 app
+            using the report feature or by contacting us at:
+            <br />
+            <strong>Email:</strong> someshk526@gmail.com
+          </p>
+
+          <h3 style={styles.subHeading}>Legal Compliance</h3>
+          <p style={styles.text}>
+            Post24 complies with all applicable child safety laws and reports
+            confirmed child sexual abuse material (CSAM) to relevant regional and
+            national authorities as required by law.
+          </p>
+        </section>
+
         <section style={styles.section}>
           <h2 style={styles.heading}>Contact</h2>
           <p style={styles.text}>
@@ -119,10 +161,19 @@ const styles = {
     color: "#007bff",
     marginBottom: "10px",
   },
+  subHeading: {
+    marginTop: "15px",
+    color: "#444",
+  },
   text: {
     color: "#666",
     lineHeight: "1.7",
     marginBottom: "10px",
+  },
+  list: {
+    paddingLeft: "20px",
+    color: "#666",
+    lineHeight: "1.6",
   },
 };
 

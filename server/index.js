@@ -105,6 +105,7 @@ io.on("connection", (socket) => {
   });
 });
 
+app.use('/uploads', express.static('uploads'));
 
 if(process.env.NODE_ENV == 'production'){
 

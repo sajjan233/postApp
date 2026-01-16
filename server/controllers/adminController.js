@@ -160,7 +160,6 @@ exports.login = async (req, res) => {
       email: email.toLowerCase().trim(),
       role: { $in: ['admin', 'masterAdmin'] }
     });
-    console.log("useruser", user);
 
 
     if (!user) {

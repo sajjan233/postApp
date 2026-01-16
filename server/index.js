@@ -33,7 +33,7 @@ const referralRoutes = require("./routes/referralRoutes");
 const queryRoutes = require("./routes/queryRoutes");
 const chatRoutes = require("./routes/chatRouter");
 const {handlePrivateMessage,userchatList} = require('./controllers/chat')
-
+const connectRoute = require('./routes/connect')
 
 
 app.use("/admin", adminRoutes);
@@ -44,7 +44,7 @@ app.use("/category", categoryRoutes);
 app.use("/referr", referralRoutes);
 app.use("/query", queryRoutes);
 app.use("/chat", chatRoutes);
-
+app.use("/", connectRoute);
 
 /* ===== HTTP SERVER ===== */
 const PORT = process.env.PORT || 5000;

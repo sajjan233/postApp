@@ -1,82 +1,104 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import QRCode from "qrcode.react";
 import "./LinkQRGenerator.css";
 
-const LinkQRGenerator = ({ onClose, referralCode }) => { // referralCode prop added
-  const [link, setLink] = useState("");
-  const [finalLink, setFinalLink] = useState("");
+const LinkQRGenerator = ({ onClose, referralCode }) => {
   const qrRef = useRef(null);
+  const [finalLink, setFinalLink] = useState("");
+  const [username, setusername] = useState("");
 
-  // 🔹 Update finalLink automatically when link or referralCode changes
+  // 🔹 Generate static link with referral code
   useEffect(() => {
-    if (!link) return;
+    let baseLink = "http://post24.in/connect";
 
-    try {
-      const url = new URL(link);
-
-      if (referralCode) {
-        url.searchParams.set("ref", referralCode); // add referral code
-      }else{
-   const user = JSON.parse(localStorage.getItem('user') || '{}');
-
-        url.searchParams.set("ref", user.referralCode); // add referral code
-
-      }
-
-      setFinalLink(url.toString());
-    } catch (err) {
-      // If user pastes non-URL text, just attach as query string
-      setFinalLink(referralCode ? `${link}?ref=${referralCode}` : link);
+    let ref = referralCode;
+    let userName = ''
+    if (!ref) {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      ref = user.referralCode;
+      userName = user.name
     }
-  }, [link, referralCode]);
+       
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      userName = user.name
+    
 
+    if (ref) {
+      baseLink = `${baseLink}?ref=${ref}`;
+    }
+    
+    setusername(userName)
+    setFinalLink(baseLink);
+  }, [referralCode]);
+
+  // 🔹 Direct QR download on button click
   const handleGenerate = () => {
     if (!finalLink) return;
 
     const canvas = qrRef.current.querySelector("canvas");
-    const pngUrl = canvas
+    const ctx = canvas.getContext("2d");
+
+    // 👉 Create new canvas (extra space for name)
+    const paddingTop = 50;
+    const newCanvas = document.createElement("canvas");
+    newCanvas.width = canvas.width;
+    newCanvas.height = canvas.height + paddingTop;
+
+    const newCtx = newCanvas.getContext("2d");
+
+    // White background
+    newCtx.fillStyle = "#fff";
+    newCtx.fillRect(0, 0, newCanvas.width, newCanvas.height);
+
+    // Draw username text
+    newCtx.fillStyle = "#000";
+    newCtx.font = "bold 22px Arial";
+    newCtx.textAlign = "center";
+    newCtx.fillText(username || "Post24 User", newCanvas.width / 2, 30);
+
+    // Draw QR code
+    newCtx.drawImage(canvas, 0, paddingTop);
+
+    // Download
+    const pngUrl = newCanvas
       .toDataURL("image/png")
       .replace("image/png", "image/octet-stream");
 
     const downloadLink = document.createElement("a");
     downloadLink.href = pngUrl;
-    downloadLink.download = "qr-code.png";
+    downloadLink.download = "post24-QR.png";
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
   };
 
+
   return (
     <div className="qr-modal-overlay" onClick={onClose}>
       <div className="qr-modal" onClick={(e) => e.stopPropagation()}>
         <div className="qr-header">
-          <h2>Generate QR Code</h2>
+          <h2>Download Referral QR</h2>
           <button className="qr-close" onClick={onClose}>×</button>
         </div>
 
-        <input
-          type="text"
-          placeholder="Paste App / PlayStore / Website Link"
-          value={link}
-          onChange={(e) => setLink(e.target.value)}
-          className="qr-input"
-        />
+
 
         <button className="btn btn-primary qr-btn" onClick={handleGenerate}>
-          Generate & Download QR
+          <h3>Download</h3>
         </button>
 
-        {/* hidden canvas */}
+        {/* Hidden QR canvas */}
         {finalLink && (
           <div ref={qrRef} style={{ display: "none" }}>
             <QRCode
-              value={finalLink}   // finalLink includes referralCode
+              value={finalLink}
               size={300}
               level="H"
               includeMargin={true}
             />
           </div>
         )}
+
       </div>
     </div>
   );

@@ -37,7 +37,8 @@ const AdminLogin = () => {
       // Store token and user info
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
-
+      console.log("user.role",user.role);
+      
       // Redirect based on role
       if (user.role === 'masterAdmin') {
         navigate('/master-admin/dashboard');

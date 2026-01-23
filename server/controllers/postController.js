@@ -56,7 +56,7 @@ exports.updatePost = async (req, res) => {
   try {
     const { id } = req.params;
     const { title, description, categoryId } = req.body;
-    
+
     // existingImages को parse करें (array या single string)
     let existingImages = req.body.existingImages || [];
     if (typeof existingImages === "string") {
@@ -82,7 +82,7 @@ exports.updatePost = async (req, res) => {
     if (categoryId) post.categoryId = categoryId;
 
     // Handle new uploaded images
-    
+
 
     let newImages = [];
     if (req.files && req.files.length > 0) {
@@ -113,13 +113,13 @@ exports.updatePost = async (req, res) => {
 exports.getFeed = async (req, res) => {
   try {
 
-    const allAdminIds = [...req.user.connections,'6921c18a71c8817b35046318'];
+    const allAdminIds = [...req.user.connections, '6921c18a71c8817b35046318'];
 
     let filter = {}
     if (allAdminIds.length) {
       filter = { adminId: { $in: allAdminIds } }
     }
-    
+
     const posts = await Post.find(filter)
       .populate('adminId', 'name shopName')
       .populate('categoryId', 'name slug') // populate category
@@ -144,6 +144,18 @@ exports.getPost = async (req, res) => {
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
     }
+
+
+    const alreadyViewed = post.viewedBy.some(
+      (id) => id.equals(req.user._id)
+    );
+
+    if (!alreadyViewed) {
+      post.viewsCount += 1;
+      post.viewedBy.push(req.user._id);
+      await post.save();
+    }
+
 
     res.json({ post });
   } catch (error) {
@@ -193,18 +205,18 @@ exports.getPostsByCategory = async (req, res) => {
     }
 
     // Check if category exists
-const last24Hours = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const last24Hours = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
 
 
 
-    const posts = await Post.find({ adminId: categoryId ,createdAt: { $gte: last24Hours }})
+    const posts = await Post.find({ adminId: categoryId, createdAt: { $gte: last24Hours } })
       .populate('adminId', 'name shopName')
       .populate('categoryId', 'name slug')
       .sort({ createdAt: -1 });
 
 
-    res.json({posts});
+    res.json({ posts });
   } catch (error) {
     console.error('Get posts by category error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });

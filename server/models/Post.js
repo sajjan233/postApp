@@ -31,7 +31,7 @@ const postSchema = new mongoose.Schema({
   images: {
     type: [String],
     validate: {
-      validator: function(v) {
+      validator: function (v) {
         return v.length <= 3;
       },
       message: 'Maximum 3 images allowed'
@@ -45,7 +45,11 @@ const postSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  }, viewedBy: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  }],
+  viewsCount: { type: Number, default: 0 }
 }, {
   timestamps: true
 });
@@ -54,7 +58,7 @@ const postSchema = new mongoose.Schema({
 postSchema.index({ adminId: 1, createdAt: -1 });
 
 // Auto-generate postId and slug before saving
-postSchema.pre('save', function(next) {
+postSchema.pre('save', function (next) {
   if (!this.postId) {
     this.postId = `POST-${Date.now()}`;
   }

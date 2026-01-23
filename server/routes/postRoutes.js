@@ -101,7 +101,7 @@ router.put(
 
 // No change for GET routes, populate category in controller handles it
 router.get('/feed',auth, getFeed);
-router.get('/:id', getPost);
+router.get('/:id',auth, getPost);
 router.get('/admin/my-posts', auth, requireRole('admin', 'masterAdmin'), getAdminPosts);
 router.get('/admin/all-posts', auth, requireRole('masterAdmin'), getAllPosts);
 router.get('/category/:categoryId', getPostsByCategory);

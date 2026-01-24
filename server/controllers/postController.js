@@ -132,6 +132,29 @@ exports.getFeed = async (req, res) => {
   }
 };
 
+exports.getAllFeed = async (req, res) => {
+  try {
+console.log("fffffffffff");
+
+    const allAdminIds = [ '6921c18a71c8817b35046318'];
+
+    let filter = {}
+    if (allAdminIds.length) {
+      filter = { adminId: { $in: allAdminIds } }
+    }
+
+    const posts = await Post.find(filter)
+      .populate('adminId', 'name shopName')
+      .populate('categoryId', 'name slug') // populate category
+      .sort({ createdAt: -1 });
+
+    res.json({ posts });
+  } catch (error) {
+    console.error('Get feed error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 // Get Single Post
 exports.getPost = async (req, res) => {
   try {

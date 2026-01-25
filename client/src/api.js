@@ -78,8 +78,9 @@ export const categoryAPI = {
 
 export const referralAPI = {
   // POST referral scan
-  scan: (referralCode, newUserId) =>
-    api.post('/referral/scan', { referralCode, newUserId })
+  scan: (referralCode, newUserId) =>  api.post('/referral/scan', { referralCode, newUserId }),
+  sharelink:() => api.get('/referral/link/:adminId')
+
 };
 
 // ================= QUERY APIs =================

@@ -41,7 +41,7 @@ app.use("/customer", customerRoutes);
 app.use("/posts", postRoutes);
 app.use("/admins", adminSearchRoutes);
 app.use("/category", categoryRoutes);
-app.use("/referr", referralRoutes);
+app.use("/referral", referralRoutes);
 app.use("/query", queryRoutes);
 app.use("/chat", chatRoutes);
 app.use("/", connectRoute);

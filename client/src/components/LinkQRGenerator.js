@@ -5,61 +5,41 @@ import "./LinkQRGenerator.css";
 const LinkQRGenerator = ({ onClose, referralCode }) => {
   const qrRef = useRef(null);
   const [finalLink, setFinalLink] = useState("");
-  const [username, setusername] = useState("");
+  const [username, setUsername] = useState("");
 
-  // 🔹 Generate static link with referral code
   useEffect(() => {
-    let baseLink = "http://post24.in/connect";
-
+    let baseLink = "https://post24.in/connect";
     let ref = referralCode;
-    let userName = ''
-    if (!ref) {
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
-      ref = user.referralCode;
-      userName = user.name
-    }
-       
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
-      userName = user.name
-    
+    let userName = "";
 
-    if (ref) {
-      baseLink = `${baseLink}?ref=${ref}`;
-    }
-    
-    setusername(userName)
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    if (!ref) ref = user.referralCode;
+    if (!userName) userName = user.name;
+
+    if (ref) baseLink = `${baseLink}?ref=${ref}`;
+    setUsername(userName);
     setFinalLink(baseLink);
   }, [referralCode]);
 
-  // 🔹 Direct QR download on button click
   const handleGenerate = () => {
     if (!finalLink) return;
-
     const canvas = qrRef.current.querySelector("canvas");
-    const ctx = canvas.getContext("2d");
-
-    // 👉 Create new canvas (extra space for name)
     const paddingTop = 50;
     const newCanvas = document.createElement("canvas");
     newCanvas.width = canvas.width;
     newCanvas.height = canvas.height + paddingTop;
-
     const newCtx = newCanvas.getContext("2d");
 
-    // White background
     newCtx.fillStyle = "#fff";
     newCtx.fillRect(0, 0, newCanvas.width, newCanvas.height);
 
-    // Draw username text
-    newCtx.fillStyle = "#000";
+    newCtx.fillStyle = "#333";
     newCtx.font = "bold 22px Arial";
     newCtx.textAlign = "center";
     newCtx.fillText(username || "Post24 User", newCanvas.width / 2, 30);
 
-    // Draw QR code
     newCtx.drawImage(canvas, 0, paddingTop);
 
-    // Download
     const pngUrl = newCanvas
       .toDataURL("image/png")
       .replace("image/png", "image/octet-stream");
@@ -72,33 +52,68 @@ const LinkQRGenerator = ({ onClose, referralCode }) => {
     document.body.removeChild(downloadLink);
   };
 
+  const handleCopyLink = () => {
+    if (!finalLink) return;
+    navigator.clipboard.writeText(finalLink);
+    alert("Referral link copied!");
+  };
+
+  const handleShareWhatsApp = () => {
+    if (!finalLink) return;
+    const text = `Install Post24 App using my referral link: ${finalLink}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+  };
+
+  const handleShareTelegram = () => {
+    if (!finalLink) return;
+    const text = `Install Post24 App using my referral link: ${finalLink}`;
+    window.open(
+      `https://t.me/share/url?url=${encodeURIComponent(finalLink)}&text=${encodeURIComponent(
+        text
+      )}`,
+      "_blank"
+    );
+  };
 
   return (
     <div className="qr-modal-overlay" onClick={onClose}>
       <div className="qr-modal" onClick={(e) => e.stopPropagation()}>
         <div className="qr-header">
-          <h2>Download Referral QR</h2>
-          <button className="qr-close" onClick={onClose}>×</button>
+          <h2>Referral QR & Link</h2>
+          <button className="qr-close" onClick={onClose}>
+            ×
+          </button>
         </div>
 
+        {/* Copy Link Section */}
+        <div className="qr-link-section">
+          <input type="text" readOnly value={finalLink} />
+          <button className="btn btn-copy" onClick={handleCopyLink}>
+            📋 Copy Link
+          </button>
+        </div>
 
+        {/* Social Share Buttons */}
+        <div className="qr-share-buttons">
+          <button className="btn btn-whatsapp" onClick={handleShareWhatsApp}>
+            💬 Share on WhatsApp
+          </button>
+          <button className="btn btn-telegram" onClick={handleShareTelegram}>
+            ✈️ Share on Telegram
+          </button>
+        </div>
 
-        <button className="btn btn-primary qr-btn" onClick={handleGenerate}>
-          <h3>Download</h3>
+        {/* Download QR */}
+        <button className="btn btn-download" onClick={handleGenerate}>
+          📥 Download QR
         </button>
 
-        {/* Hidden QR canvas */}
+        {/* Hidden QR */}
         {finalLink && (
           <div ref={qrRef} style={{ display: "none" }}>
-            <QRCode
-              value={finalLink}
-              size={300}
-              level="H"
-              includeMargin={true}
-            />
+            <QRCode value={finalLink} size={300} level="H" includeMargin={true} />
           </div>
         )}
-
       </div>
     </div>
   );

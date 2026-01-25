@@ -3,31 +3,40 @@ const router = express.Router();
 
 router.get("/connect", (req, res) => {
   const ref = req.query.ref || "";
-console.log("ref",ref);
 
+  // Play Store referral link
+  const playStoreLink = `https://play.google.com/store/apps/details?id=com.sajjan_node_dev.post24&referrer=utm_content=${ref}`;
+
+  // App deep link
   const appLink = `post24://connect?ref=${ref}`;
-  const playStore =
-    "https://play.google.com/store/apps/details?id=com.sajjan_node_dev.post24";
 
   res.send(`
     <!DOCTYPE html>
     <html>
       <head>
+        <meta charset="utf-8">
         <title>Connecting...</title>
-        <meta charset="utf-8" />
         <script>
-          window.location.href = "${appLink}";
-          setTimeout(function () {
-            window.location.href = "${playStore}";
-          }, 1500);
+          // 1️⃣ Try open app directly
+          const openApp = () => {
+            window.location = "${appLink}";
+            setTimeout(() => {
+              // 2️⃣ Fallback: Play Store link if app not installed
+              window.location = "${playStoreLink}";
+            }, 1500);
+          };
+
+          openApp();
         </script>
       </head>
       <body>
-        <p>Opening Post24 App...</p>
+        <p>Redirecting to Post24 App...</p>
+        <a href="${playStoreLink}">Click here if not redirected</a>
       </body>
     </html>
   `);
 });
 
-module.exports = router;
 
+
+module.exports = router;

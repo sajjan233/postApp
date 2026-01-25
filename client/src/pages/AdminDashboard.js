@@ -79,7 +79,7 @@ const AdminDashboard = () => {
           Any Query
           </button>
           <button className="btn btn-primary" onClick={() => setShowQRModal(true)}>
-            Generate QR
+            Generate QR / Share Link
           </button>
 
           <button className="btn btn-primary" onClick={() => setShowCreateModal(true)}>

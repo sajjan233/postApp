@@ -276,7 +276,7 @@ exports.postUrl = async (req, res) => {
       ? `https://post24.in/${post.images[0]}`
       : "https://post24.in/default_post_image.png";
 
-    const url = `https://post24.in/posts/${postId}`; // page URL
+    const url = `https://post24.in/posts/?postId=${postId}`; // page URL
     const appLink = `post24://post?postId=${postId}`;
     const playStoreLink = `https://play.google.com/store/apps/details?id=com.sajjan_node_dev.post24`;
 

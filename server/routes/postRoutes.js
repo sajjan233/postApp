@@ -4,7 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const sharp = require("sharp");
-const { createPost, getFeed,getAllFeed, getPost, getAdminPosts, getAllPosts, getPostsByCategory,createImgPost, updatePost } = require('../controllers/postController.js');
+const { createPost, getFeed,getAllFeed, getPost,postUrl, getAdminPosts, getAllPosts, getPostsByCategory,createImgPost, updatePost } = require('../controllers/postController.js');
 const { auth, requireRole } = require('../middleware/auth');
 
 // Create uploads directory if it doesn't exist
@@ -104,6 +104,7 @@ router.get('/feed',auth, getFeed);
 router.get('/allfeed', getAllFeed);
 
 router.get('/:id',auth, getPost);
+router.get('/:postId', postUrl);
 router.get('/admin/my-posts', auth, requireRole('admin', 'masterAdmin'), getAdminPosts);
 router.get('/admin/all-posts', auth, requireRole('masterAdmin'), getAllPosts);
 router.get('/category/:categoryId', getPostsByCategory);

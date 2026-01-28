@@ -263,3 +263,46 @@ exports.createImgPost = async (req, res) => {
 
   }
 } 
+
+
+exports.postUrl =  async (req, res) => {
+  const postId = req.params.postId;
+  const post = await Post.findById(postId).populate("adminId");
+
+  const title = post?.title || "Post24 Post";
+  const description = post?.description || "Check this post on Post24";
+  const image = post?.images?.[0] ? `https://post24.in/${post.images[0]}` : "https://post24.in/default_post_image.png";
+  const url = `https://post24.in/post/${postId}`;
+
+  const appLink = `post24://post?postId=${postId}`; // App deep link
+  const playStoreLink = `https://play.google.com/store/apps/details?id=com.sajjan_node_dev.post24`;
+
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>${title}</title>
+
+      <!-- OG tags for preview -->
+      <meta property="og:title" content="${title}" />
+      <meta property="og:description" content="${description}" />
+      <meta property="og:image" content="${image}" />
+      <meta property="og:url" content="${url}" />
+      <meta name="twitter:card" content="summary_large_image" />
+
+      <script>
+        // Try open app, fallback to Play Store after 1.5s
+        setTimeout(() => { window.location = "${playStoreLink}"; }, 1500);
+        window.location = "${appLink}";
+      </script>
+    </head>
+    <body>
+      <h1>${title}</h1>
+      <p>${description}</p>
+      <img src="${image}" alt="Post Image" />
+      <p>If app doesn't open automatically, <a href="${playStoreLink}">click here</a>.</p>
+    </body>
+    </html>
+  `);
+}

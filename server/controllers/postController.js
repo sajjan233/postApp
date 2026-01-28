@@ -267,7 +267,7 @@ exports.createImgPost = async (req, res) => {
 
 exports.postUrl = async (req, res) => {
   try {
-    const postId = req.params.postId;
+    const postId = req.query.postId;
     const post = await Post.findById(postId).populate("adminId");
 
     const title = post?.title || "Post24 Post";

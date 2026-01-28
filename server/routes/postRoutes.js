@@ -104,7 +104,7 @@ router.get('/feed',auth, getFeed);
 router.get('/allfeed', getAllFeed);
 
 router.get('/:id',auth, getPost);
-router.get('/:postId', postUrl);
+router.get('/', postUrl);
 router.get('/admin/my-posts', auth, requireRole('admin', 'masterAdmin'), getAdminPosts);
 router.get('/admin/all-posts', auth, requireRole('masterAdmin'), getAllPosts);
 router.get('/category/:categoryId', getPostsByCategory);

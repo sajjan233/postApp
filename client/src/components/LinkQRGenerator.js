@@ -6,51 +6,97 @@ const LinkQRGenerator = ({ onClose, referralCode }) => {
   const qrRef = useRef(null);
   const [finalLink, setFinalLink] = useState("");
   const [username, setUsername] = useState("");
+const [shopName, setShopName] = useState("");
+useEffect(() => {
+  let baseLink = "https://post24.in/connect";
+  let ref = referralCode;
 
-  useEffect(() => {
-    let baseLink = "https://post24.in/connect";
-    let ref = referralCode;
-    let userName = "";
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    if (!ref) ref = user.referralCode;
-    if (!userName) userName = user.name;
+  if (!ref) ref = user.referralCode;
 
-    if (ref) baseLink = `${baseLink}?ref=${ref}`;
-    setUsername(userName);
-    setFinalLink(baseLink);
-  }, [referralCode]);
+  if (ref) baseLink = `${baseLink}?ref=${ref}`;
 
-  const handleGenerate = () => {
-    if (!finalLink) return;
-    const canvas = qrRef.current.querySelector("canvas");
-    const paddingTop = 50;
-    const newCanvas = document.createElement("canvas");
-    newCanvas.width = canvas.width;
-    newCanvas.height = canvas.height + paddingTop;
-    const newCtx = newCanvas.getContext("2d");
+  setShopName(user.shopName || "Post24 Partner");
+  setFinalLink(baseLink);
+}, [referralCode]);
 
-    newCtx.fillStyle = "#fff";
-    newCtx.fillRect(0, 0, newCanvas.width, newCanvas.height);
+const drawGradient = (ctx, x, y, w, h) => {
+  const gradient = ctx.createLinearGradient(0, y, 0, y + h);
+  gradient.addColorStop(0, "#667eea");
+  gradient.addColorStop(1, "#764ba2");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(x, y, w, h);
+};
 
-    newCtx.fillStyle = "#333";
-    newCtx.font = "bold 22px Arial";
-    newCtx.textAlign = "center";
-    newCtx.fillText(username || "Post24 User", newCanvas.width / 2, 30);
+const handleGenerate = () => {
+  if (!finalLink || !shopName) return;
 
-    newCtx.drawImage(canvas, 0, paddingTop);
+  const qrCanvas = qrRef.current.querySelector("canvas");
 
-    const pngUrl = newCanvas
-      .toDataURL("image/png")
-      .replace("image/png", "image/octet-stream");
+  const width = 420;
+  const height = 560;
 
-    const downloadLink = document.createElement("a");
-    downloadLink.href = pngUrl;
-    downloadLink.download = "post24-QR.png";
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-  };
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+
+  const ctx = canvas.getContext("2d");
+
+  /* ===== BACKGROUND ===== */
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, width, height);
+
+  /* ===== HEADER ===== */
+  drawGradient(ctx, 0, 0, width, 90);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 30px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("Post24", width / 2, 42);
+
+  ctx.font = "14px Arial";
+  ctx.fillText("Available on Google Play", width / 2, 68);
+
+  /* ===== SHOP NAME ===== */
+  ctx.fillStyle = "#222";
+  ctx.font = "bold 18px Arial";
+  ctx.fillText(shopName, width / 2, 125);
+
+  ctx.font = "14px Arial";
+  ctx.fillStyle = "#666";
+  ctx.fillText("Official Post24 Partner", width / 2, 145);
+
+  /* ===== QR CARD SHADOW ===== */
+  ctx.fillStyle = "rgba(0,0,0,0.1)";
+  ctx.fillRect(55, 170, 310, 310);
+
+  /* ===== QR CARD ===== */
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(45, 160, 310, 310);
+
+  ctx.drawImage(qrCanvas, 65, 180, 270, 270);
+
+  /* ===== FOOTER ===== */
+  drawGradient(ctx, 0, height - 70, width, 70);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 16px Arial";
+  ctx.fillText("Scan • Install from Play Store • Connect", width / 2, height - 40);
+
+  /* ===== DOWNLOAD ===== */
+  const pngUrl = canvas
+    .toDataURL("image/png")
+    .replace("image/png", "image/octet-stream");
+
+  const link = document.createElement("a");
+  link.href = pngUrl;
+  link.download = `${shopName}-Post24-QR.png`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 
   const handleCopyLink = () => {
     if (!finalLink) return;

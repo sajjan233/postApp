@@ -276,8 +276,8 @@ exports.postUrl = async (req, res) => {
       ? `https://post24.in/${post.images[0]}`
       : "https://post24.in/default_post_image.png";
 
-    const url = `https://post24.in/posts/${postId}`;
-    const appLink = `post24://post?postId=${postId}`; // App deep link
+    const url = `https://post24.in/posts/${postId}`; // page URL
+    const appLink = `post24://post?postId=${postId}`;
     const playStoreLink = `https://play.google.com/store/apps/details?id=com.sajjan_node_dev.post24`;
 
     res.send(`
@@ -287,25 +287,17 @@ exports.postUrl = async (req, res) => {
         <meta charset="utf-8">
         <title>${title}</title>
 
-        <!-- OG tags for social preview -->
+        <!-- OG tags for FB/Twitter/WA preview -->
         <meta property="og:title" content="${title}" />
         <meta property="og:description" content="${description}" />
         <meta property="og:image" content="${image}" />
         <meta property="og:url" content="${url}" />
         <meta name="twitter:card" content="summary_large_image" />
 
+        <!-- Fallback to Play Store / App -->
         <script>
-          // Open app or fallback to Play Store
-          const openApp = () => {
-            const now = Date.now();
-            window.location = "${appLink}";
-            setTimeout(() => {
-              if (Date.now() - now < 1600) {
-                window.location = "${playStoreLink}";
-              }
-            }, 1500);
-          }
-          window.onload = openApp;
+          setTimeout(() => { window.location = "${playStoreLink}"; }, 1500);
+          window.location = "${appLink}";
         </script>
       </head>
       <body>
@@ -321,3 +313,4 @@ exports.postUrl = async (req, res) => {
     res.status(500).send("Something went wrong");
   }
 };
+

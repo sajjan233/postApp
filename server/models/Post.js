@@ -45,11 +45,43 @@ const postSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }, viewedBy: [{
+  },
+  viewedBy: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   }],
-  viewsCount: { type: Number, default: 0 }
+  viewsCount: { type: Number, default: 0 },
+
+maxAllowed: {
+    type: Number,
+    required: true
+  },
+
+  sentCount: {
+    type: Number,
+    default: 0
+  },
+
+  startTime: {
+    type: Date,
+    required: true
+  },
+
+  expireTime: {
+    type: Date,
+    required: true
+  },
+
+  lastSentAt: {
+    type: Date,
+    default: null
+  },
+
+  isCompleted: {
+    type: Boolean,
+    default: false
+  }
+
 }, {
   timestamps: true
 });

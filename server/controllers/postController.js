@@ -37,7 +37,13 @@ exports.createPost = async (req, res) => {
       title,
       description,
       images,
-      postId
+      postId,
+      maxAllowed: { type: Number, required: true },
+      sentCount: { type: Number, default: 0 },
+      startTime: { type: Date, required: true },
+      expireTime: { type: Date, required: true },
+      lastSentAt: { type: Date, default: null },
+      isCompleted: { type: Boolean, default: false }
     });
 
     await post.save();
@@ -134,9 +140,9 @@ exports.getFeed = async (req, res) => {
 
 exports.getAllFeed = async (req, res) => {
   try {
-console.log("fffffffffff");
+    console.log("fffffffffff");
 
-    const allAdminIds = [ '6921c18a71c8817b35046318'];
+    const allAdminIds = ['6921c18a71c8817b35046318'];
 
     let filter = {}
     if (allAdminIds.length) {
@@ -262,7 +268,7 @@ exports.createImgPost = async (req, res) => {
     return res.status(500).json({ message: 'Server error', error: error.message });
 
   }
-} 
+}
 
 
 exports.postUrl = async (req, res) => {

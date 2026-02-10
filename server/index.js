@@ -6,6 +6,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const { v4: uuidv4 } = require("uuid");
 const path = require('path')
+const schedule = require('./services/schudeler')
 dotenv.config();
 
 const app = express();
@@ -20,7 +21,8 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log("✅ MongoDB Connected"))
+  .then(() => console.log("✅ MongoDB Connected")
+)
   .catch((err) => console.error("❌ MongoDB Error:", err));
 
 // Routes (your existing routes)
@@ -32,7 +34,7 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const referralRoutes = require("./routes/referralRoutes");
 const queryRoutes = require("./routes/queryRoutes");
 const chatRoutes = require("./routes/chatRouter");
-const {handlePrivateMessage,userchatList} = require('./controllers/chat')
+const {handlePrivateMessage} = require('./controllers/chat')
 const connectRoute = require('./routes/connect')
 
 

@@ -25,11 +25,19 @@ api.interceptors.request.use(
 
 // Admin APIs
 export const adminAPI = {
+  // Auth
   register: (data) => api.post('/admin/register', data),
   userregister: (data) => api.post('/admin/userregister', data),
   login: (data) => api.post('/admin/login', data),
+
+  // Admin fetch
   getByKey: (adminKey) => api.get(`/admin/by/${adminKey}`),
+
+  // 🔔 Update notification subscription (MASTER ADMIN)
+  updateNotificationSubscription: (userId, data) =>
+    api.put(`/admin/${userId}/notification-subscription`, data),
 };
+
 
 // Customer APIs
 export const customerAPI = {

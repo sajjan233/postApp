@@ -53,7 +53,13 @@ exports.register = async (req, res) => {
       shopName,
       pincode,
       famousPlace,
-      role: 'admin'
+      role: 'admin',
+      notificationSubscription: {
+        isActive: false,
+        maxNotificationPerPostPerDay: 0,
+        startDate: null,
+        endDate: null
+      }
     });
 
     await admin.save();
@@ -81,7 +87,7 @@ exports.register = async (req, res) => {
 exports.registeruser = async (req, res) => {
   try {
     const { name, email, number, password, referralCode } = req.body;
-console.log("name, email, number,",name, email, number,);
+    console.log("name, email, number,", name, email, number,);
 
     if (!number) {
       return res.status(400).json({ message: "Invalid number" });
@@ -229,3 +235,54 @@ exports.getAdminByKey = async (req, res) => {
 };
 
 
+exports.updateNotificationSubscription = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const {
+      isActive,
+      maxNotificationPerPostPerDay,
+      startDate,
+      endDate
+    } = req.body;
+
+    // validation
+    if (isActive && maxNotificationPerPostPerDay <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "maxNotificationPerPostPerDay must be greater than 0"
+      });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {
+        notificationSubscription: {
+          isActive,
+          maxNotificationPerPostPerDay,
+          startDate,
+          endDate
+        }
+      },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Notification subscription updated",
+      data: user.notificationSubscription
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};

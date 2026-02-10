@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: function() {
+    required: function () {
       return this.role === 'admin' || this.role === 'masterAdmin';
     }
   },
@@ -53,19 +53,25 @@ const userSchema = new mongoose.Schema({
     unique: true,
     sparse: true
   },
-  referralCode: { type: String},
+  referralCode: { type: String },
   connections: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
     }
   ],
+  notificationSubscription: {
+    isActive: { type: Boolean, default: false },
+    maxNotificationPerPostPerDay: { type: Number, default: 0 },
+    startDate: { type: Date },
+    endDate: { type: Date }
+  }
 
 }, {
   timestamps: true
 });
 
- function generateUniqueCode(name, phone) {
+function generateUniqueCode(name, phone) {
   let oddLetters = '';
   let evenNumbers = '';
 
@@ -89,9 +95,9 @@ const userSchema = new mongoose.Schema({
 }
 
 // Hash password before saving
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
-  
+
   if (this.password) {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
@@ -100,7 +106,7 @@ userSchema.pre('save', async function(next) {
 });
 
 // Generate adminKey for admin users
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
   if (this.role === 'admin' && !this.adminKey) {
     const { v4: uuidv4 } = require('uuid');
     this.adminKey = uuidv4();
@@ -108,15 +114,15 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
-userSchema.pre('save',async function(next) {
-  if(this.role == 'admin'){
+userSchema.pre('save', async function (next) {
+  if (this.role == 'admin') {
     const uniqueCode = generateUniqueCode(this.shopName ? this.shopName : this.name, this.phone);
     this.referralCode = uniqueCode
   }
   next();
 })
 // Generate customerId for customer users
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
   if (this.role === 'customer' && !this.customerId) {
     const { v4: uuidv4 } = require('uuid');
     this.customerId = uuidv4();
@@ -125,7 +131,7 @@ userSchema.pre('save', async function(next) {
 });
 
 // Compare password method
-userSchema.methods.comparePassword = async function(candidatePassword) {
+userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 

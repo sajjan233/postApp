@@ -1,56 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { postAPI, categoryAPI } from '../api';
+import React, { useState } from 'react';
+import { postAPI } from '../api';
 import './CreatePostModal.css';
 
 const CreatePostModal = ({ onClose, onPostCreated }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    categoryId: ''   // this is subcategory if selected
+    startDate: '',
+    endDate: '',
+    maxNotificationPerPostPerDay: 1
   });
-
-  // const [mainCategories, setMainCategories] = useState([]);
-  // const [subCategories, setSubCategories] = useState([]);
-  const [selectedMainCategory, setSelectedMainCategory] = useState(""); // main category
 
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Load main categories
-  // useEffect(() => {
-  //   categoryAPI.getList()
-  //     .then((res) => setMainCategories(res.data))
-  //     .catch(() => setError("Failed to load categories"));
-  // }, []);
-
-  // Fetch sub categories by parentId
-  // const loadSubCategories = async (parentId) => {
-  //   try {
-  //     const res = await categoryAPI.getByParent(parentId);
-  //     setSubCategories(res.data);
-  //   } catch (err) {
-  //     setSubCategories([]);
-  //   }
-  // };
-
-  // When main category changes
-  const handleMainCategoryChange = async (e) => {
-    const id = e.target.value;
-
-    setSelectedMainCategory(id); // store main category
-
-    // Reset subcategory
-    setFormData({
-      ...formData,
-      categoryId: ""
-    });
-
-   
-  };
-
-  // Handle text input changes
   const handleChange = (e) => {
+    setError(null);
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -66,49 +32,35 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
       return;
     }
 
-    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
-    const invalidFiles = files.filter(file => !allowedTypes.includes(file.type.toLowerCase()));
-
-    if (invalidFiles.length > 0) {
-      setError("Only image files allowed (JPG, PNG, GIF, WEBP)");
-      return;
-    }
-
     setImages([...images, ...files]);
-    setError(null);
   };
 
   const removeImage = (index) => {
     setImages(images.filter((_, i) => i !== index));
   };
 
-  // Submit post
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
+    if (new Date(formData.endDate) < new Date(formData.startDate)) {
+      setError("End date cannot be before start date");
+      setLoading(false);
+      return;
+    }
+
     try {
-      // If subcategory selected -> use that
-      // else use main category
-      // const finalCategoryId = formData.categoryId || selectedMainCategory;
+      const data = new FormData();
+      data.append("title", formData.title);
+      data.append("description", formData.description);
+      data.append("startDate", formData.startDate);
+      data.append("endDate", formData.endDate);
+      data.append("maxNotificationPerPostPerDay", formData.maxNotificationPerPostPerDay);
 
-      // if (!finalCategoryId) {
-      //   setError("Please select at least Main Category.");
-      //   setLoading(false);
-      //   return;
-      // }
+      images.forEach((img) => data.append("images", img));
 
-      const formDataToSend = new FormData();
-      formDataToSend.append("title", formData.title);
-      formDataToSend.append("description", formData.description);
-      // formDataToSend.append("categoryId", finalCategoryId);
-
-      images.forEach((image) => {
-        formDataToSend.append("images", image);
-      });
-
-      await postAPI.createPost(formDataToSend);
+      await postAPI.createPost(data);
       onPostCreated();
 
     } catch (err) {
@@ -130,7 +82,6 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
         {error && <div className="error">{error}</div>}
 
         <form onSubmit={handleSubmit}>
-
           <input
             type="text"
             name="title"
@@ -146,65 +97,59 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
             className="input textarea"
             placeholder="Post Description *"
             required
-            rows="4"
             value={formData.description}
             onChange={handleChange}
           />
 
-          {/* MAIN CATEGORY */}
-          {/* <select className="input" onChange={handleMainCategoryChange}>
-            <option value="">Select Main Category *</option>
-            {mainCategories.map((cat) => (
-              <option key={cat._id} value={cat._id}>{cat.name}</option>
-            ))}
-          </select> */}
-
-          {/* SUB CATEGORY (optional) */}
-          {/* <select
-            name="categoryId"
+          <label>Start Date</label>
+          <input
+            type="date"
+            name="startDate"
             className="input"
-            value={formData.categoryId}
+            required
+            value={formData.startDate}
             onChange={handleChange}
-          >
-            <option value="">Select Sub Category (Optional)</option>
+          />
 
-            {subCategories.map((sub) => (
-              <option key={sub._id} value={sub._id}>{sub.name}</option>
-            ))}
-          </select> */}
+          <label>End Date</label>
+          <input
+            type="date"
+            name="endDate"
+            className="input"
+            required
+            value={formData.endDate}
+            onChange={handleChange}
+          />
 
-          {/* IMAGE UPLOAD */}
-          <div className="image-upload-section">
-            <label className="upload-label">
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleImageChange}
-                disabled={images.length >= 4}
-              />
-              <span className="upload-btn">Choose Images (Max 4)</span>
-            </label>
+          <label>Max Notification Per Day</label>
+          <input
+            type="number"
+            name="maxNotificationPerPostPerDay"
+            className="input"
+            min="1"
+            value={formData.maxNotificationPerPostPerDay}
+            onChange={handleChange}
+          />
 
-            <p className="upload-hint">{images.length}/4 images selected</p>
+          {/* Images */}
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleImageChange}
+            disabled={images.length >= 4}
+          />
 
-            {images.length > 0 && (
-              <div className="image-preview">
-                {images.map((image, index) => (
-                  <div key={index} className="preview-item">
-                    <img src={URL.createObjectURL(image)} alt="" />
-                    <button
-                      type="button"
-                      className="remove-image"
-                      onClick={() => removeImage(index)}
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          {images.length > 0 && (
+            <div className="image-preview">
+              {images.map((img, i) => (
+                <div key={i}>
+                  <img src={URL.createObjectURL(img)} alt="" />
+                  <button type="button" onClick={() => removeImage(i)}>×</button>
+                </div>
+              ))}
+            </div>
+          )}
 
           <div className="modal-actions">
             <button type="button" className="btn btn-secondary" onClick={onClose}>
@@ -214,7 +159,6 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
               {loading ? "Creating..." : "Create Post"}
             </button>
           </div>
-
         </form>
 
       </div>

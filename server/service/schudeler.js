@@ -6,8 +6,7 @@ const Post = require("../models/Post");
 const Device = require("../models/Device");
 const sendPush = require("./sendNotification");
 
-cron.schedule("*/1 * * * *", async () => {  // every 1 minute
-  console.log("Checking scheduled notifications...");
+cron.schedule("*/10 * * * *", async () => {
 
   const now = new Date();
 
@@ -21,26 +20,34 @@ cron.schedule("*/1 * * * *", async () => {  // every 1 minute
 
     for (let post of posts) {
 
+      if (!post.maxAllowed || post.maxAllowed <= 0) continue;
+
       const intervalMinutes = (24 * 60) / post.maxAllowed;
 
-      // 🔥 First time (never sent)
-      if (!post.lastSentAt) {
-        // allow send immediately
-      } else {
+      if (post.lastSentAt) {
         const diffMinutes = (now - post.lastSentAt) / 1000 / 60;
-
-        if (diffMinutes < intervalMinutes) {
-          continue; // skip if interval not completed
-        }
+        
+        if (diffMinutes < intervalMinutes) continue;
       }
 
-      // 🔥 Get tokens
-      const devices = await Device.find({});
-      const tokens = devices.map(d => d.fcmToken);
+      const devices = await Device.find(
+        { fcmToken: { $exists: true, $ne: null } },
+        { fcmToken: 1, _id: 0 }
+      );
 
+      const tokens = devices.map(d => d.fcmToken);
       if (!tokens.length) continue;
 
-      await sendPush(tokens, post.title, post.description);
+      const chunkArray = (arr, size) =>
+        Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
+          arr.slice(i * size, i * size + size)
+        );
+
+      const tokenChunks = chunkArray(tokens, 500);
+
+      for (let chunk of tokenChunks) {        
+        await sendPush(chunk, post.title, post.description);
+      }
 
       post.sentCount += 1;
       post.lastSentAt = now;
@@ -56,6 +63,7 @@ cron.schedule("*/1 * * * *", async () => {  // every 1 minute
     console.error("Scheduler error:", err);
   }
 });
+
 
 
 cron.schedule("0 0 * * *", async () => {

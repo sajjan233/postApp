@@ -1,9 +1,11 @@
 const Device = require("../models/Device");
 const admin = require("./firebase");
 
-const sendPush = async (token, title, body) => {
+const sendPush = async (tokens, title, body) => {
+  console.log("tokens, title, body",tokens, title, body);
+  
   const message = {
-    token,
+    tokens,
     notification: {
       title,
       body,
@@ -14,8 +16,16 @@ const sendPush = async (token, title, body) => {
   };
 
   try {
-    const response = await admin.messaging().send(message);
-    console.log("Notification sent:", response);
+    
+    const response = await admin.messaging().sendEachForMulticast({
+  tokens: tokens,
+  notification: {
+    title: title,
+    body: body,
+
+  }
+});
+    // console.log("Notification sent:", response);
   } catch (err) {
     console.error("FCM Error:", err);
   }

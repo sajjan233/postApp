@@ -6,7 +6,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const { v4: uuidv4 } = require("uuid");
 const path = require('path')
-const schedule = require('./services/schudeler')
+const schedule = require('./service/schudeler')
 
 dotenv.config();
 

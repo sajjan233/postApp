@@ -31,6 +31,8 @@ pids/
 .npm/
 server/services/*.json
 .env
+server/service/*.json
+.env
 
 # Optional eslint cache
 .eslintcache

@@ -31,20 +31,22 @@ exports.createPost = async (req, res) => {
     );
     const postId = `user${counter.seq}`;
 
-    const post = new Post({
+    let data = {
       adminId,
       categoryId, // save category
       title,
       description,
       images,
       postId,
-      maxAllowed: { type: Number, required: true },
-      sentCount: { type: Number, default: 0 },
-      startTime: { type: Date, required: true },
-      expireTime: { type: Date, required: true },
-      lastSentAt: { type: Date, default: null },
-      isCompleted: { type: Boolean, default: false }
-    });
+    }
+
+    if (req?.user?.notificationSubscription?.isActive) {
+      data.maxAllowed = req?.user?.notificationSubscription?.maxNotificationPerPostPerDay
+        data.startTime = req.body.startDate
+        data.expireTime = req.body.endDate
+    }
+
+    const post = new Post(data);
 
     await post.save();
 

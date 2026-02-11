@@ -1,0 +1,100 @@
+.choose-admin {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.choose-admin-container {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.choose-admin-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 40px;
+  font-size: 1.1rem;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.option-btn {
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.option-btn:hover {
+  background: #e9ecef;
+  border-color: #007bff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+.option-btn .icon {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.option-btn h2 {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.option-btn p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+
+.name-input {
+  width: 80%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.submit-btn {
+  margin-top: 20px;
+  padding: 12px 20px;
+  font-size: 18px;
+  background: #4CAF50;
+  color: #fff;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.back-btn {
+  margin-top: 15px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background: #ddd;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}

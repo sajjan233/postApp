@@ -1,0 +1,17 @@
+{
+  "name": "csc-poster-app",
+  "version": "1.0.0",
+  "description": "Full stack post application with admin panel, public website, and backend API",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cd server && npm run dev",
+    "server": "cd server && npm run server",
+    "client": "cd client && npm start",
+    "webapp": "cd webapp && npm start",
+    "mobile": "cd mobile && npm start",
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install && cd ../webapp && npm install && cd ../mobile && npm install"
+  }
+}

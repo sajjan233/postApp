@@ -1,0 +1,64 @@
+/* Container */
+.query-box {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+}
+
+/* Heading */
+.query-box h3 {
+  margin-bottom: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Textarea */
+.query-box textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.query-box textarea:focus {
+  border-color: #007bff;
+}
+
+/* Error message */
+.query-box .error {
+  color: #d32f2f;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+/* Submit button */
+.query-box button {
+  margin-top: 12px;
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  background: #007bff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.query-box button:hover {
+  background: #0056b3;
+}
+
+.query-box button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

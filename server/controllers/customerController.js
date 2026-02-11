@@ -96,7 +96,6 @@ exports.list = async (req, res) => {
   }
 }
 
-
 exports.savetoken = async (req, res) => {
   const { userId, fcmToken } = req.body;
 

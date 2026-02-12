@@ -12,7 +12,7 @@ cron.schedule("*/10 * * * *", async () => {
 
   try {
     const posts = await Post.find({
-      startTime: { $lte: now },
+      nextSendAt: { $lte: now },   // 🔥 sirf jinka time aa gaya
       expireTime: { $gte: now },
       isCompleted: false,
       $expr: { $lt: ["$sentCount", "$maxAllowed"] }
@@ -26,7 +26,7 @@ cron.schedule("*/10 * * * *", async () => {
 
       if (post.lastSentAt) {
         const diffMinutes = (now - post.lastSentAt) / 1000 / 60;
-        
+
         if (diffMinutes < intervalMinutes) continue;
       }
 
@@ -45,7 +45,7 @@ cron.schedule("*/10 * * * *", async () => {
 
       const tokenChunks = chunkArray(tokens, 500);
 
-      for (let chunk of tokenChunks) {        
+      for (let chunk of tokenChunks) {
         await sendPush(chunk, post.title, post.description);
       }
 
@@ -56,6 +56,11 @@ cron.schedule("*/10 * * * *", async () => {
         post.isCompleted = true;
       }
 
+     
+
+      post.nextSendAt = new Date(
+        now.getTime() + intervalMinutes * 60 * 1000
+      );
       await post.save();
     }
 

@@ -80,7 +80,8 @@ maxAllowed: {
   isCompleted: {
     type: Boolean,
     default: false
-  }
+  },
+  nextSendAt: { type: Date }
 
 }, {
   timestamps: true

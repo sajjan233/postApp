@@ -44,6 +44,8 @@ exports.createPost = async (req, res) => {
       data.maxAllowed = req?.user?.notificationSubscription?.maxNotificationPerPostPerDay
         data.startTime = req.body.startDate
         data.expireTime = req.body.endDate
+       data.nextSendAt = req.body.startDate
+
     }
 
     const post = new Post(data);

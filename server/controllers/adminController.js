@@ -125,10 +125,15 @@ exports.registeruser = async (req, res) => {
     // 🔹 Handle referral for existing user
     if (referrerId && !user.connections.includes(referrerId)) {
       user.connections.push(referrerId); // add referrer ID to user connections
+      user.connections = [...new Set(user.connections)]
+
       await user.save();
       console.log(`Referral connection added: ${user._id} → ${referrerId}`);
     } else {
       user.connections.push('6921c18a71c8817b35046318'); // add referrer ID to user connections
+
+      user.connections = [...new Set(user.connections)]
+
       await user.save();
     }
 

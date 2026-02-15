@@ -299,7 +299,6 @@ exports.postUrl = async (req, res) => {
 
         <!-- OG tags for FB/Twitter/WA preview -->
         <meta property="og:title" content="${title}" />
-        <meta property="og:description" content="${description}" />
         <meta property="og:image" content="${image}" />
         <meta property="og:url" content="${url}" />
         <meta name="twitter:card" content="summary_large_image" />
@@ -311,8 +310,7 @@ exports.postUrl = async (req, res) => {
         </script>
       </head>
       <body>
-        <h1>${title}</h1>
-        <p>${description}</p>
+        <h1>${title} more...</h1>
         <img src="${image}" alt="Post Image" style="max-width:100%;" />
         <p>If app doesn't open automatically, <a href="${playStoreLink}">click here</a>.</p>
       </body>
